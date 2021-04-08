@@ -92,4 +92,4 @@ describe('Leaderboard', () => {
         expect(testlb.getTopScores()[0].userName).not.toBe(testPlayer.id);
       });
     });
-  });
+});
