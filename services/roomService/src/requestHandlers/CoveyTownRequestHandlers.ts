@@ -265,14 +265,6 @@ export async function startGameHandler(requestData: StartGameRequest): Promise<R
   }
 }
 
-catch(e) {
-  return {
-    isOK: false,
-    message: 'Unable to start game',
-  }
-}
-}
-
   catch(e) {
     return {
       isOK: false,
