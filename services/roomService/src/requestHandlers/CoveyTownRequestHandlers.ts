@@ -254,11 +254,8 @@ export async function updateLeaderboardHandler(requestData: UpdateLeaderboardReq
 /**  related to tictactoe**/
 export async function startGameHandler(requestData: StartGameRequest): Promise<ResponseEnvelope<StartGameResponse>> {
     const townsStore = CoveyTownsStore.getInstance();
+    try{
     const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
-      return {
-        isOK: false,
-        message: 'Unable to start game',
-      }
     return {
       isOK: true,
       response: {
@@ -266,6 +263,14 @@ export async function startGameHandler(requestData: StartGameRequest): Promise<R
       },
       message: 'game has been started',
     }
+  }
+
+  catch(e) {
+    return {
+      isOK: false,
+      message: 'Unable to start game',
+    }
+  }
   }
 
 export async function isgameActiveHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
