@@ -55,8 +55,8 @@ export default class TicTacToe implements ITicTacToe{
 
 
 startGame(playerID: string): string {
-  if (this._player1Id == '') {
-    this._player1Id == playerID;
+  if (this._player1Id === '') {
+    this._player1Id = playerID;
     return "Waiting for player2";
   }
 

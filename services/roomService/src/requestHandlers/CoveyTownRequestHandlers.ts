@@ -273,6 +273,14 @@ catch(e) {
 }
 }
 
+  catch(e) {
+    return {
+      isOK: false,
+      message: 'Unable to start game',
+    }
+  }
+  }
+
 export async function isgameActiveHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.isgameActive(requestData.coveyTownID);
