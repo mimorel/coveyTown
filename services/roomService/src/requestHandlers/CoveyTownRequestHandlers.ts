@@ -92,24 +92,24 @@ export interface UpdateLeaderboardRequest {
   points: number;
 }
 
-export interface startGameRequest{
+export interface StartGameRequest{
   coveyTownID: string;
   playerID: string;
 }
 
-export interface startGameResponse {
+export interface StartGameResponse {
   gameStatus: string;
 }
 
-export interface infoRequest{
+export interface InfoRequest{
   coveyTownID: string;
 }
 
-export interface playerResponse {
+export interface PlayerResponse {
   player: string;
 }
 
-export interface getBoardResponse {
+export interface GetBoardResponse {
   board: number[][];
 }
 
@@ -120,7 +120,7 @@ export interface makeMoveRequest {
   y: string;
 }
 
-export interface infoResponse{
+export interface InfoResponse{
 
 }
 
@@ -252,23 +252,28 @@ export async function updateLeaderboardHandler(requestData: UpdateLeaderboardReq
 }
 
 /**  related to tictactoe**/
-export async function startGameHandler(requestData: startGameRequest): Promise<ResponseEnvelope<startGameResponse>> {
-    const townsStore = CoveyTownsStore.getInstance();
-    const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
-      return {
-        isOK: false,
-        message: 'Unable to start game',
-      }
+export async function startGameHandler(requestData: StartGameRequest): Promise<ResponseEnvelope<StartGameResponse>> {
+  const townsStore = CoveyTownsStore.getInstance();
+  try{
+  const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
+  return {
+    isOK: true,
+    response: {
+      gameStatus: game
+    },
+    message: 'game has been started',
+  }
+}
+
+  catch(e) {
     return {
-      isOK: true,
-      response: {
-        gameStatus: game
-      },
-      message: 'game has been started',
+      isOK: false,
+      message: 'Unable to start game',
     }
   }
+  }
 
-export async function isgameActiveHandler(requestData: infoRequest): Promise<ResponseEnvelope<infoResponse>> {
+export async function isgameActiveHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.isgameActive(requestData.coveyTownID);
       if (!game) {
@@ -284,7 +289,7 @@ export async function isgameActiveHandler(requestData: infoRequest): Promise<Res
     }
   }
 
-export async function currentPlayerHandler(requestData: infoRequest): Promise<ResponseEnvelope<playerResponse>> {
+export async function currentPlayerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.currentPlayer(requestData.coveyTownID);
 
@@ -302,7 +307,7 @@ export async function currentPlayerHandler(requestData: infoRequest): Promise<Re
     }
   }
 
-  export async function getWinnerHandler(requestData: infoRequest): Promise<ResponseEnvelope<playerResponse>> {
+  export async function getWinnerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
         const townsStore = CoveyTownsStore.getInstance();
         const game = townsStore.getWinner(requestData.coveyTownID);
         if ("") {
@@ -320,7 +325,7 @@ export async function currentPlayerHandler(requestData: infoRequest): Promise<Re
     }
 
 
-export async function getBoardHandler(requestData: infoRequest): Promise<ResponseEnvelope<getBoardResponse>> {
+export async function getBoardHandler(requestData: InfoRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.getBoard(requestData.coveyTownID);
       const _errorForBug = [[5,0,0],
@@ -341,7 +346,7 @@ export async function getBoardHandler(requestData: infoRequest): Promise<Respons
     }
   }
 
-export async function makeMoveHandler(requestData: makeMoveRequest): Promise<ResponseEnvelope<getBoardResponse>> {
+export async function makeMoveHandler(requestData: makeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
       const _errorForBug = [[5,0,0],
@@ -361,7 +366,7 @@ export async function makeMoveHandler(requestData: makeMoveRequest): Promise<Res
     }
   }
 
-export async function endGameHandler(requestData: infoRequest): Promise<ResponseEnvelope<infoResponse>> {
+export async function endGameHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.endGame(requestData.coveyTownID);
       if (!game) {

@@ -55,8 +55,8 @@ export default class TicTacToe implements ITicTacToe{
 
 
 startGame(playerID: string): string {
-  if (this._player1Id == '') {
-    this._player1Id == playerID;
+  if (this._player1Id === '') {
+    this._player1Id = playerID;
     return "Waiting for player2";
   }
 
@@ -82,13 +82,7 @@ startGame(playerID: string): string {
 
 getWinner(): string {
   if (this._winningPlayer == "") {
-    // gameboard was completed
-    if (this.isFull()) {
-      return "Draw"
-    }
-    else{
-      return("Game Unfinished, No Winner")
-    }
+    throw  Error('no winner');
   }
   return this._winningPlayer;
 }
