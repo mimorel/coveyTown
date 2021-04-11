@@ -113,7 +113,7 @@ export interface GetBoardResponse {
   board: number[][];
 }
 
-export interface makeMoveRequest {
+export interface MakeMoveRequest {
   coveyTownID: string;
   player: string;
   x: string;
@@ -346,7 +346,7 @@ export async function getBoardHandler(requestData: InfoRequest): Promise<Respons
     }
   }
 
-export async function makeMoveHandler(requestData: makeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
+export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
       const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
       const _errorForBug = [[5,0,0],

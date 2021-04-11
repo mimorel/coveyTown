@@ -1,10 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import assert from 'assert';
 import { ServerPlayer } from './Player';
-import { StartGameRequest,
-  StartGameResponse,InfoRequest, InfoResponse, PlayerResponse, GetBoardResponse, makeMoveRequest
-} from '../../../services/roomService/src/requestHandlers/CoveyTownRequestHandlers'
-
 
 /**
  * The format of a request to join a Town in Covey.Town, as dispatched by the server middleware
@@ -68,6 +64,23 @@ export interface TownDeleteRequest {
   coveyTownPassword: string;
 }
 
+export interface StartGameRequest{
+  coveyTownID: string;
+  playerID: string;
+}
+
+export interface StartGameResponse {
+  gameStatus: string;
+}
+
+export interface InfoRequest{
+  coveyTownID: string;
+}
+
+export interface PlayerResponse {
+  player: string;
+}
+
 /**
  * Payload sent by the client to update a Town.
  * N.B., JavaScript is terrible, so:
@@ -88,6 +101,17 @@ export type ScoreList = { userName: string, score: number };
 
 export interface LeaderboardResponse {
   scores: ScoreList[];
+}
+
+export interface GetBoardResponse {
+  board: number[][];
+}
+
+export interface MakeMoveRequest {
+  coveyTownID: string;
+  player: string;
+  x: string;
+  y: string;
 }
 
 /**
@@ -166,7 +190,8 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async makeMove(requestData: makeMoveRequest): Promise<GetBoardResponse> {
+  async makeMove(requestData: MakeMoveRequest): Promise<GetBoardResponse> {
+    console.log(`makeMove request: ${requestData.x} ${requestData.y}`);
     const responseWrapper = await this._axios.post(`/tictactoe/${requestData.coveyTownID}/${requestData.player}/move`);
     console.log(responseWrapper.data);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);

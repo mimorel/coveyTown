@@ -54,6 +54,7 @@ function Game(props) {
   const { playerUsername } = props;
 
 
+
   function getStatus() {
     return "return status here"
     // change this
@@ -84,60 +85,59 @@ function Game(props) {
     }
   }
 
-  function getPos(i) {
-    const arr = [];
+ async function getPosX(i) {
+    console.log(`pos x function got ${i}`);
     switch (i) {
       case 0:
-        arr.add(0);
-        arr.add(0);
-        break;
-        case 1:
-          arr.add(1);
-          arr.add(0);
-          break;
-          case 2: 
-          arr.add(2);
-          arr.add(0);
-          break;
-          case 3: 
-          arr.add(0);
-          arr.add(1);
-          break;
-          case 4:
-            arr.add(1);
-            arr.add(1);
-            break;
-            case 5: 
-            arr.add(2);
-            arr.add(1);
-            break;
-            case 6:
-              arr.add(0);
-              arr.add(2);
-              break;
-              case 7: 
-              arr.add(1);
-              arr.add(2);
-              break;
-              case 8: 
-              arr.add(2);
-              arr.add(2);
-              break;
-              default:
-                console.log("default case");
-              
+      case 3:
+      case 6:
+        return 0;
+      case 1:
+      case 4:
+      case 7:
+        return 1;
+      case 2: 
+      case 5:
+      case 8: 
+        return 2;
+      default:
+      console.log("default case");
     }
-    return arr;
+    return 99;
   }
 
-  async function makeMove(xPos, yPos) {
-    try {
-      const newTownInfo = await apiClient.makeMove({
+ async function getPosY(i) {
+    switch (i) {
+      case 0:
+      case 1:
+      case 2:
+        return 0;
+      case 3:
+      case 4:
+      case 5:
+        return 1;
+      case 6: 
+      case 7:
+      case 8: 
+        return 2;
+      default:
+      console.log("default case");
+    }
+    return 99;
+  }
+
+  async function makeMove(i) {
+    const x = await getPosX(i);
+    const y = await getPosY(i);
+    try {    
+      console.log(`x pos: ${x} y pos: ${y}`);
+      const move = await apiClient.makeMove({
         coveyTownID: townID,
         player: playerID,
-        x: xPos,
-        y: yPos,
+        x,
+        y
       });
+      console.log(`makeMove response ${move.board}`);
     } catch (err) {
       toast({
         title: 'Unable to make move',
@@ -157,11 +157,10 @@ function Game(props) {
             return;
           }
           // send makeMove request here
-          makeMove(getPos[0], getPos[1]);
+          makeMove(i);
           const nextSquares = squares.slice();
           nextSquares[i] = nextSymbol;
           setSquares(nextSquares);
-
           setIsXNext(!isXNext); // toggle turns
         }}
       />
