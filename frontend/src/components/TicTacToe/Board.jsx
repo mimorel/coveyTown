@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import ReactDOM from "react-dom";
 import {
   Toast,
-  useToast
+  useToast,
+  Button
 } from '@chakra-ui/react';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
@@ -28,9 +29,9 @@ Square.defaultProps = {
 function Restart({onClick}) {
 
   return (
-    <button type="button" className="restart" onClick={onClick}>
+    <Button size="sm" colorScheme="teal" type="button" className="restart" onClick={onClick}>
       Play again
-    </button>
+    </Button>
   );
 }
 
@@ -54,18 +55,6 @@ function Game(props) {
   const { playerUsername } = props;
 
 
-  function getStatus() {
-    return "return status here"
-    // change this
-    // if (nextSymbol) {
-    //   return "Winner: " + "add winner here";
-    // } else if (isBoardFull(squares)) {
-    //   return "Draw!";
-    // } else { 
-    //   return `Next player: ${nextSymbol}`;
-    // }
-  }
-
   // start game call here
   async function startGame() {
     console.log(`playerid for start game: ${playerID}`);
@@ -74,7 +63,7 @@ function Game(props) {
         coveyTownID: townID,
         playerID,
       });
-      console.log(`startgame resp:${start.gameStatus}`);
+      console.log(`startgame resp: ${start.gameStatus}`);
     } catch (err) {
       toast({
         title: 'Unable to startgame',
@@ -84,60 +73,58 @@ function Game(props) {
     }
   }
 
-  function getPos(i) {
-    const arr = [];
+ async function getPosX(i) {
     switch (i) {
       case 0:
-        arr.add(0);
-        arr.add(0);
-        break;
-        case 1:
-          arr.add(1);
-          arr.add(0);
-          break;
-          case 2: 
-          arr.add(2);
-          arr.add(0);
-          break;
-          case 3: 
-          arr.add(0);
-          arr.add(1);
-          break;
-          case 4:
-            arr.add(1);
-            arr.add(1);
-            break;
-            case 5: 
-            arr.add(2);
-            arr.add(1);
-            break;
-            case 6:
-              arr.add(0);
-              arr.add(2);
-              break;
-              case 7: 
-              arr.add(1);
-              arr.add(2);
-              break;
-              case 8: 
-              arr.add(2);
-              arr.add(2);
-              break;
-              default:
-                console.log("default case");
-              
+      case 3:
+      case 6:
+        return 0;
+      case 1:
+      case 4:
+      case 7:
+        return 1;
+      case 2: 
+      case 5:
+      case 8: 
+        return 2;
+      default:
+      console.log("default case");
     }
-    return arr;
+    return 99;
   }
 
-  async function makeMove(xPos, yPos) {
-    try {
-      const newTownInfo = await apiClient.makeMove({
+ async function getPosY(i) {
+    switch (i) {
+      case 0:
+      case 1:
+      case 2:
+        return 0;
+      case 3:
+      case 4:
+      case 5:
+        return 1;
+      case 6: 
+      case 7:
+      case 8: 
+        return 2;
+      default:
+      console.log("default case");
+    }
+    return 99;
+  }
+
+  async function makeMove(i) {
+    const x = await getPosX(i);
+    const y = await getPosY(i);
+    try {    
+      console.log(`x pos: ${x} y pos: ${y}`);
+      const move = await apiClient.makeMove({
         coveyTownID: townID,
         player: playerID,
-        x: xPos,
-        y: yPos,
+        x,
+        y
       });
+      console.log(`makeMove response ${move.board}`);
     } catch (err) {
       toast({
         title: 'Unable to make move',
@@ -157,11 +144,10 @@ function Game(props) {
             return;
           }
           // send makeMove request here
-          makeMove(getPos[0], getPos[1]);
+          makeMove(i);
           const nextSquares = squares.slice();
           nextSquares[i] = nextSymbol;
           setSquares(nextSquares);
-
           setIsXNext(!isXNext); // toggle turns
         }}
       />
@@ -199,10 +185,9 @@ function Game(props) {
             {renderSquare(8)}
           </div>
         </div>
-        <div className="game-info">{getStatus()}</div>
-        <button type="button" className="start" onClick={()=> startGame()}>
+        <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>
           Start
-    </button>
+    </Button>
         <div className="restart-button">{renderRestartButton()}</div>
       </div>
     </div>

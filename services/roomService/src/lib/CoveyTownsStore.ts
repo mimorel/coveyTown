@@ -151,6 +151,7 @@ export default class CoveyTownsStore {
         return existingTown.makeMove(x,y);
     }
   }
+  console.log("error for bug is returned");
     return this._errorForBug;
   }
 
