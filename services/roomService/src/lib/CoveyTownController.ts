@@ -287,7 +287,7 @@ export default class CoveyTownController {
     }
 
     this._tictactoe.endGame();
-    this._TTTlisteners.forEach((listener) => listener.onGameEnd(winner));
+    this._listeners.forEach((listener) => listener.onGameEnd(winner));
   }
 
 }
