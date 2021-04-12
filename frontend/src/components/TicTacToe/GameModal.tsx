@@ -26,7 +26,6 @@ export default function GameModal({ players }: ChildComponentProps) {
   const playerUsername = video?.userName;
   const townID = video?.coveyTownID;
 
-  // const { players } = props;
   const playerID = players.find((p) => p.userName === playerUsername)?.id;
 
   const openGame = useCallback(()=>{
@@ -44,17 +43,6 @@ export default function GameModal({ players }: ChildComponentProps) {
   }, [onClose, video]);
 
 
-  // Assuming there are no duplicate usernames for the scope of this project
-  // we will search for player ID through the array.
-  const getPlayerID = () =>  {
-    alert("fuck");
-    const pl = players.find((p) => p.userName === playerUsername);
-    console.log(pl!.id);
-    console.log(pl?.userName);
-    return pl!.id;
-  }
-
-
   return <>
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay/>
@@ -62,9 +50,6 @@ export default function GameModal({ players }: ChildComponentProps) {
       <ModalHeader>TIC TAC TOE</ModalHeader>
     <div className="game">
               <div className="board">
-                {/* {console.log(`username: ${playerUsername}`)}
-                {console.log(`players ${JSON.stringify(players)}`)}
-                {console.log(`id: ${playerID}`)} */}
                 <Game townID={townID} playerID={playerID} playerUsername={playerUsername}
                   />  
                   </div>

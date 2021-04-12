@@ -263,7 +263,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
     try {
       const result = await makeMoveHandler({
         coveyTownID: req.params.townID,
-        player: req.params.player,
+        player: req.params.playerID,
         x: req.body.x,
         y: req.body.y,
       });

@@ -75,7 +75,7 @@ function Game(props) {
         coveyTownID: townID,
         playerID,
       });
-      console.log(`startgame resp:${start.gameStatus}`);
+      console.log(`startgame resp: ${start.gameStatus}`);
     } catch (err) {
       toast({
         title: 'Unable to startgame',
@@ -86,7 +86,6 @@ function Game(props) {
   }
 
  async function getPosX(i) {
-    console.log(`pos x function got ${i}`);
     switch (i) {
       case 0:
       case 3:
