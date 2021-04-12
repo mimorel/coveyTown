@@ -201,7 +201,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
     Who's turn is it for this town's tictactoe game
   **/
-  app.get('/tictactoe/:townID', BodyParser.json(), async (req, res) => {
+  app.get('/tictactoe/curplayer/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await currentPlayerHandler({
         coveyTownID: req.params.townID,

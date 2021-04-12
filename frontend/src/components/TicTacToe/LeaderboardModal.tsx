@@ -61,12 +61,19 @@ setCurrentLeaderboard(scoreList.scores);
       <ModalOverlay/>
       <ModalContent>
           {}
-        <ModalHeader>Tic-Tac-Toe Leaderboard</ModalHeader>
+        <ModalHeader style={{alignSelf: "center"}}>Tic-Tac-Toe Leaderboard</ModalHeader>
+        <table>
+          <tr>
+            <th>USERNAME</th>
+            <th>SCORE</th>
+            </tr>
         {currentLeaderboard?.map((result, index) => 
-                  <div key={result.userName} className="row">
-                  {"Username: "}{result.userName}{" Score: "}{result.score}
-              </div>)}
-              <Button onClick={closeLeaderboard}>Close</Button>
+                  <tr key={result.userName} className="row">
+                  <td>{result.userName}</td>
+                  <td>{result.score}</td>
+              </tr>)}
+              </table>
+              <Button colorScheme="red" style={{width: "20%", alignSelf: "center", marginTop: "10px"}} onClick={closeLeaderboard}>Close</Button>
           <ModalBody pb={6}/>
       </ModalContent>
     </Modal>

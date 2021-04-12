@@ -1,11 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
@@ -14,7 +12,7 @@ import {
 import Player from '../../classes/Player'
 import useMaybeVideo from '../../hooks/useMaybeVideo';
 import Game from './Board'
-// import Game from './Game'
+import useCoveyAppState from "../../hooks/useCoveyAppState";
 
 interface ChildComponentProps {
   players: Array<Player>;
@@ -25,6 +23,10 @@ export default function GameModal({ players }: ChildComponentProps) {
   const video = useMaybeVideo()
   const playerUsername = video?.userName;
   const townID = video?.coveyTownID;
+  const  { apiClient } = useCoveyAppState();
+  const toast = useToast();
+  const [ currentTurn, setCurrentTurn ] = useState("Waiting for player");
+
 
   const playerID = players.find((p) => p.userName === playerUsername)?.id;
 
@@ -37,6 +39,38 @@ export default function GameModal({ players }: ChildComponentProps) {
     video.openGameModal = openGame;
   }
 
+    // quit game call here
+    async function quitGame() {
+      try {
+        const quit = await apiClient.endGame({coveyTownID: townID!});
+        console.log(`quitgame resp: ${quit.message}`);
+      } catch (err) {
+        toast({
+          title: 'Unable to quit game',
+          description: err.toString(),
+          status: 'error'
+        })
+      }
+    }
+
+    async function getWhoseTurn() {
+      // console.log(`playerid for start game: ${playerID}`);
+      try {
+        const curr = await apiClient.currentPlayer({
+          coveyTownID: townID!,
+        });
+        console.log(`currplayer resp: ${curr.player}`);
+        setCurrentTurn(`${curr.player}'s Turn`);
+      } catch (err) {
+        console.log("couldnt get current player");
+        }
+      }
+
+      useEffect(() =>  {
+        getWhoseTurn();
+      });
+    
+
   const closeGame = useCallback(()=>{
     onClose();
     video?.unPauseGame();
@@ -48,13 +82,14 @@ export default function GameModal({ players }: ChildComponentProps) {
       <ModalOverlay/>
       <ModalContent>
       <ModalHeader>TIC TAC TOE</ModalHeader>
+      <div className="game-info">{currentTurn}</div>
     <div className="game">
               <div className="board">
                 <Game townID={townID} playerID={playerID} playerUsername={playerUsername}
                   />  
                   </div>
                   </div>
-        <Button onClick={closeGame}>Close</Button>
+        <Button colorScheme="red" style={{width: "20%", alignSelf: "center", marginTop: "10px"}} onClick={()=> {closeGame(); quitGame();}}>QUIT</Button>
           <ModalBody pb={6}/>
       </ModalContent>
     </Modal>

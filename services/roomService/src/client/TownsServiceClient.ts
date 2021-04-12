@@ -185,6 +185,9 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-
+  async endGame(requestData: InfoRequest): Promise<InfoResponse> {
+    const responseWrapper = await this._axios.delete(`/tictactoe/${requestData.coveyTownID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
 
 }

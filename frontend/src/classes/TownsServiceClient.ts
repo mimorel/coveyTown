@@ -81,6 +81,11 @@ export interface PlayerResponse {
   player: string;
 }
 
+
+export interface InfoResponse{
+  message: "deleted game";
+}
+
 /**
  * Payload sent by the client to update a Town.
  * N.B., JavaScript is terrible, so:
@@ -195,4 +200,15 @@ export default class TownsServiceClient {
     console.log(responseWrapper.data);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
+
+  async endGame(requestData: InfoRequest): Promise<InfoResponse> {
+    const responseWrapper = await this._axios.delete(`/tictactoe/${requestData.coveyTownID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async currentPlayer(requestData: InfoRequest): Promise<PlayerResponse> {
+    const responseWrapper = await this._axios.get(`/tictactoe/curplayer/${requestData.coveyTownID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+  
 }

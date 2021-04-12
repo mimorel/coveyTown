@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import ReactDOM from "react-dom";
 import {
   Toast,
-  useToast
+  useToast,
+  Button
 } from '@chakra-ui/react';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
@@ -28,9 +29,9 @@ Square.defaultProps = {
 function Restart({onClick}) {
 
   return (
-    <button type="button" className="restart" onClick={onClick}>
+    <Button size="sm" colorScheme="teal" type="button" className="restart" onClick={onClick}>
       Play again
-    </button>
+    </Button>
   );
 }
 
@@ -53,19 +54,6 @@ function Game(props) {
   const toast = useToast();
   const { playerUsername } = props;
 
-
-
-  function getStatus() {
-    return "return status here"
-    // change this
-    // if (nextSymbol) {
-    //   return "Winner: " + "add winner here";
-    // } else if (isBoardFull(squares)) {
-    //   return "Draw!";
-    // } else { 
-    //   return `Next player: ${nextSymbol}`;
-    // }
-  }
 
   // start game call here
   async function startGame() {
@@ -197,10 +185,9 @@ function Game(props) {
             {renderSquare(8)}
           </div>
         </div>
-        <div className="game-info">{getStatus()}</div>
-        <button type="button" className="start" onClick={()=> startGame()}>
+        <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>
           Start
-    </button>
+    </Button>
         <div className="restart-button">{renderRestartButton()}</div>
       </div>
     </div>
