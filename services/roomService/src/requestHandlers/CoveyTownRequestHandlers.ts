@@ -413,6 +413,7 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
     ///TTT-specific events
     onjoinGame(playerId: string) {
       socket.emit('playerJoinedTTT', playerId);
+
     },
 
     onUpdateBoard(board: Number[][]) {
