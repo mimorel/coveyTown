@@ -104,7 +104,7 @@ export default class CoveyTownController {
     this._sessions.push(theSession);
     this._players.push(newPlayer);
 
-    // add player to the leaderboard 
+    // add player to the leaderboard
     this._leaderboard.addPlayerToLeaderboard(newPlayer);
 
     // Create a video token for this user to join this town
@@ -210,7 +210,7 @@ export default class CoveyTownController {
       try{
         const gameResponse = this._tictactoe.startGame(playerID);
 
-        this._TTTlisteners.forEach((listener) => listener.onjoinGame(playerID));
+        this._listeners.forEach((listener) => listener.onjoinGame(playerID));
 
         return gameResponse;
       }
