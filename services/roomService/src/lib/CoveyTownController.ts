@@ -157,7 +157,7 @@ export default class CoveyTownController {
    */
   addGameListener(listener: CoveyTownListener): void {
     this._TTTlisteners.push(listener);
-    console.log("step2")
+    console.log("step2");
   }
 
   /**
@@ -213,7 +213,7 @@ export default class CoveyTownController {
 
         this._listeners.forEach((listener) => listener.onjoinGame(playerID));
         this._listeners.forEach((listener) => this.addGameListener(listener));
-        console.log("step1")
+        console.log("step1");
 
 
 
@@ -252,9 +252,9 @@ export default class CoveyTownController {
   makeMove(x:number, y:number): number[][] {
     try{
     this._tictactoe.makeMove(x,y);
-    console.log("mk1")
+    console.log("mk1");
     this._TTTlisteners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
-    console.log("mk2")
+    console.log("mk2");
 
     // is game over
     if (this.isgameActive() === false) {
