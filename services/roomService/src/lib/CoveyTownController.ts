@@ -251,9 +251,11 @@ export default class CoveyTownController {
 
   makeMove(x:number, y:number): number[][] {
     try{
+    console.log("mk0");
+
     this._tictactoe.makeMove(x,y);
     console.log("mk1");
-    this._TTTlisteners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
+    this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
     console.log("mk2");
 
     // is game over
