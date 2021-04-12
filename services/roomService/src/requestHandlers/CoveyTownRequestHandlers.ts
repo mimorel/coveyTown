@@ -417,6 +417,7 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
     },
 
     onUpdateBoard(board: Number[][]) {
+      console.log("before");
       socket.emit("updateBoard", board);
       console.log("UpdatedBoarddd");
     },

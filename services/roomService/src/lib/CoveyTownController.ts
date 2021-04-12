@@ -275,6 +275,7 @@ export default class CoveyTownController {
   }
 
   endGame(): void{
+    try{
     const winner =  this.getWinner();
     const allScores = this.getScores();
     const leaderboardListing = allScores.find(e => e.userName === winner);
@@ -285,9 +286,15 @@ export default class CoveyTownController {
     else{
       this.updateLeaderboard(winner,leaderboardListing.score);
     }
-
-    this._tictactoe.endGame();
     this._listeners.forEach((listener) => listener.onGameEnd(winner));
+
   }
+  finally {
+    this._tictactoe.endGame();
+  }
+
+
+  }
+
 
 }
