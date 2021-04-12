@@ -417,6 +417,7 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
 
     onUpdateBoard(board: Number[][]) {
       socket.emit("updateBoard", board);
+      console.log("UpdatedBoarddd");
     },
 
     onTurn(playerId: string) {
