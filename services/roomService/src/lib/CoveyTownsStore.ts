@@ -13,9 +13,10 @@ function passwordMatches(provided: string, expected: string): boolean {
 
 export default class CoveyTownsStore {
   private static _instance: CoveyTownsStore;
-  private _errorForBug = [[5,0,0],
-              [0,0,0],
-              [0,0,0]];
+
+  private _errorForBug = [[5, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]];
 
   private _towns: CoveyTownController[] = [];
 
@@ -89,23 +90,24 @@ export default class CoveyTownsStore {
     return existingTown;
   }
 
-  /**  related to tictactoe**/
+  /**  
+   * related to tictactoe
+   */
 
   startGame(coveyTownID:string, playerID: string): string {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown) {
       try {
-      const response = existingTown.startGame(playerID);
-      return response;
+        const response = existingTown.startGame(playerID);
+        return response;
+      } catch (err) {
+        return err;
+      }
     }
-    catch(err){
-      return err;
-    }
-    }
-    return "Unable to find town";
+    return 'Unable to find town';
   }
 
-  isgameActive(coveyTownID:string): boolean |undefined {
+  isgameActive(coveyTownID:string): boolean | undefined {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown) {
       return existingTown.isgameActive();
@@ -114,14 +116,12 @@ export default class CoveyTownsStore {
   }
 
 
-  currentPlayer(coveyTownID:string): string{
+  currentPlayer(coveyTownID:string): string {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown) {
       return existingTown.currentPlayer();
-    }
-    else {
-      return "";
-    }
+    } 
+    return '';
   }
 
 
@@ -130,7 +130,7 @@ export default class CoveyTownsStore {
     if (existingTown) {
       return existingTown.getWinner();
     }
-    return "";
+    return '';
   }
 
 
@@ -143,23 +143,23 @@ export default class CoveyTownsStore {
   }
 
 
-  makeMove(coveyTownID:string, x:number, y:number, player: string): number[][]{
+  makeMove(coveyTownID:string, x:number, y:number, player: string): number[][] {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown) {
       const currentPlayer = existingTown.currentPlayer();
-      if (currentPlayer == player) {
-        return existingTown.makeMove(x,y);
+      if (currentPlayer === player) {
+        return existingTown.makeMove(x, y);
+      }
     }
-  }
-  console.log("error for bug is returned");
+    console.log('error for bug is returned');
     return this._errorForBug;
   }
 
   endGame(coveyTownID:string): boolean {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown) {
-    existingTown.endGame();
-    return true;
+      existingTown.endGame();
+      return true;
     }
     return false;
   }

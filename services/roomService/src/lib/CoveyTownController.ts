@@ -20,6 +20,7 @@ export default class CoveyTownController {
   get capacity(): number {
     return this._capacity;
   }
+
   set isPubliclyListed(value: boolean) {
     this._isPubliclyListed = value;
   }
@@ -69,6 +70,7 @@ export default class CoveyTownController {
   private _listeners: CoveyTownListener[] = [];
 
   private _TTTlisteners: CoveyTownListener[] = [];
+
   private readonly _coveyTownID: string;
 
   private _friendlyName: string;
@@ -157,7 +159,7 @@ export default class CoveyTownController {
    */
   addGameListener(listener: CoveyTownListener): void {
     this._TTTlisteners.push(listener);
-    console.log("step2");
+    console.log('step2');
   }
 
   /**
@@ -205,26 +207,24 @@ export default class CoveyTownController {
     return this._leaderboard.getTopScores();
   }
 
-//** TicTacToe calls **/
+  /** TicTacToe calls */
   startGame(playerID: string): string {
-    if ( this._players.some(e => e.id === playerID)){
-      try{
+    if (this._players.some(e => e.id === playerID)) {
+      try {
         const gameResponse = this._tictactoe.startGame(playerID);
 
         this._listeners.forEach((listener) => listener.onjoinGame(playerID));
         this._listeners.forEach((listener) => this.addGameListener(listener));
-        console.log("step1");
+        console.log('step1');
 
 
 
         return gameResponse;
+      } catch (e) {
+        throw new Error('unable to startGame');
       }
-      catch (e) {
-        throw new Error("unable to startGame");
-      }
-    }
-    else {
-      throw new Error("Players are not part of the room");
+    } else {
+      throw new Error('Players are not part of the room');
     }
   }
 
@@ -250,51 +250,45 @@ export default class CoveyTownController {
 
 
   makeMove(x:number, y:number): number[][] {
-    try{
-    console.log("mk0");
+    try {
+      console.log('mk0');
 
-    this._tictactoe.makeMove(x,y);
-    console.log("mk1");
-    this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
-    console.log("mk2");
+      this._tictactoe.makeMove(x, y);
+      console.log('mk1');
+      this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
+      console.log('mk2');
 
-    // is game over
-    if (this.isgameActive() === false) {
-    this.endGame();
+      // is game over
+      if (this.isgameActive() === false) {
+        this.endGame();
+      } else {
+        // update current player
+        this._TTTlisteners.forEach((listener) => listener.onTurn(this.currentPlayer()));
       }
-    else{
-      //update current player
-      this._TTTlisteners.forEach((listener) => listener.onTurn(this.currentPlayer()));
+
+      return this._tictactoe.getBoard();
+    } catch (err) {
+      return err;
     }
-
-    return this._tictactoe.getBoard();
-  }
-  catch(err) {
-    return err;
-  }
   }
 
-  endGame(): void{
-    try{
-    const winner =  this.getWinner();
-    const allScores = this.getScores();
-    const leaderboardListing = allScores.find(e => e.userName === winner);
+  endGame(): void {
+    try {
+      const winner =  this.getWinner();
+      const allScores = this.getScores();
+      const leaderboardListing = allScores.find(e => e.userName === winner);
 
-    if (leaderboardListing === undefined) {
-      this.updateLeaderboard(winner, 1);
+      if (leaderboardListing === undefined) {
+        this.updateLeaderboard(winner, 1);
+      } else {
+        this.updateLeaderboard(winner, leaderboardListing.score);
+      }
+
+      this._listeners.forEach((listener) => listener.onGameEnd(winner));
+
+    } finally {
+      this._tictactoe.endGame();
     }
-    else{
-      this.updateLeaderboard(winner,leaderboardListing.score);
-    }
-    this._listeners.forEach((listener) => listener.onGameEnd(winner));
-
   }
-  finally {
-    this._tictactoe.endGame();
-  }
-
-
-  }
-
 
 }
