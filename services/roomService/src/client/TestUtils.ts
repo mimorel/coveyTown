@@ -45,6 +45,7 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
   playerMoved: Promise<RemoteServerPlayer>,
   newPlayerJoined: Promise<RemoteServerPlayer>,
   playerDisconnected: Promise<RemoteServerPlayer>,
+  updateBoard: Promise<RemoteServerPlayer>,
 } {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
@@ -76,6 +77,13 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
       resolve(player);
     });
   });
+
+  const updateBoardPromise = new Promise<RemoteServerPlayer>((resolve) => {
+      socket.on('updateBoard', (board: RemoteServerPlayer) => {
+        resolve(board);
+      });
+    });
+    
   createdSocketClients.push(socket);
   return {
     socket,
@@ -84,6 +92,7 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
     playerMoved: playerMovedPromise,
     newPlayerJoined: newPlayerPromise,
     playerDisconnected: playerDisconnectPromise,
+    updateBoard: updateBoardPromise,
   };
 }
 export function setSessionTokenAndTownID(coveyTownID: string, sessionToken: string, socket: ServerSocket):void {
