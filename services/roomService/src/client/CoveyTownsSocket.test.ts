@@ -3,7 +3,6 @@ import CORS from 'cors';
 import http from 'http';
 import { nanoid } from 'nanoid';
 import { AddressInfo } from 'net';
-import { promisify } from 'util';
 import io from 'socket.io';
 import * as TestUtils from './TestUtils';
 

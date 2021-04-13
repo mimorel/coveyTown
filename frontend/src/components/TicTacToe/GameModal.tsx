@@ -18,7 +18,7 @@ interface ChildComponentProps {
   players: Array<Player>;
 }
 
-export default function GameModal({ players }: ChildComponentProps) {
+export default function GameModal({ players }: ChildComponentProps): JSX.Element {
   const {isOpen, onOpen, onClose} = useDisclosure()
   const video = useMaybeVideo()
   const playerUsername = video?.userName;
@@ -42,7 +42,10 @@ export default function GameModal({ players }: ChildComponentProps) {
     // quit game call here
     async function quitGame() {
       try {
-        const quit = await apiClient.endGame({coveyTownID: townID!});
+        let quit = { message: 'TownID is undefined'}
+        if (townID !== undefined) {
+          quit = await apiClient.endGame({ coveyTownID: townID });
+        }
         console.log(`quitgame resp: ${quit.message}`);
       } catch (err) {
         toast({
@@ -56,9 +59,12 @@ export default function GameModal({ players }: ChildComponentProps) {
     async function getWhoseTurn() {
       // console.log(`playerid for start game: ${playerID}`);
       try {
-        const curr = await apiClient.currentPlayer({
-          coveyTownID: townID!,
-        });
+        let curr = { player: 'TownID was undefined'}
+        if (townID !== undefined) {
+          curr = await apiClient.currentPlayer({
+            coveyTownID: townID,
+          });
+        }
         console.log(`currplayer resp: ${curr.player}`);
         setCurrentTurn(`${curr.player}'s Turn`);
       } catch (err) {

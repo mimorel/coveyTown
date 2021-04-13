@@ -341,14 +341,14 @@ class CoveyGameScene extends Phaser.Scene {
       );
 
     this.physics.add.overlap(sprite, tictactoe,
-      (overlappingObject, t)=>{
-      if(cursorKeys.space.isDown && this.player){
+      () => {
+      if (cursorKeys.space.isDown && this.player){
         this.video.openGameModal();
         this.pause();
         }
           // throw new Error(`Unable to find tictactoe board`);
         
-      })
+      });
 
     // LEADERBOARD FOR TIC TAC TOE
     const leaderboard = map.createFromObjects('Objects',
@@ -364,13 +364,13 @@ class CoveyGameScene extends Phaser.Scene {
       );
 
     this.physics.add.overlap(sprite, leaderboard,
-      (overlappingObject, t)=>{
+      () => {
       if(cursorKeys.space.isDown && this.player){
         console.log("hit");
         this.video.openLeaderboardModal();
         this.pause();
         }
-        }
+      }
     )
 
     this.emitMovement({

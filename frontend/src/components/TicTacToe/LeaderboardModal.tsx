@@ -3,13 +3,10 @@ import {
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  useToast
 } from '@chakra-ui/react';
 import { ScoreList } from '../../classes/TownsServiceClient';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
@@ -45,7 +42,7 @@ const LeaderboardModal: React.FunctionComponent = () => {
     }    
   );
 setCurrentLeaderboard(scoreList.scores);
-}, [setCurrentLeaderboard, apiClient]);
+}, [setCurrentLeaderboard, apiClient, currentTownID]);
 
   useEffect(() => {
     updateLeaderboard();
@@ -67,7 +64,7 @@ setCurrentLeaderboard(scoreList.scores);
             <th>USERNAME</th>
             <th>SCORE</th>
             </tr>
-        {currentLeaderboard?.map((result, index) => 
+        {currentLeaderboard?.map((result) => 
                   <tr key={result.userName} className="row">
                   <td>{result.userName}</td>
                   <td>{result.score}</td>
