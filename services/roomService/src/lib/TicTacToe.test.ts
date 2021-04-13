@@ -35,8 +35,8 @@ describe('TicTacToe Tests', () => {
       // player 1 moves
       game.makeMove(x, y);
       expect(game.getBoard()[x][y]).toBe(1);
-      for (let i = 1; i < 3; i++) {
-        for (let j = 1; j < 3; j++) {
+      for (let i = 1; i < 3; i += 1) {
+        for (let j = 1; j < 3; j += 1) {
           expect(game.getBoard()[i][j]).toBe(0);
         }
       }
@@ -100,7 +100,7 @@ describe('TicTacToe Tests', () => {
       expect(game.isgameActive()).toBe(true);
       expect(gameEnded).not.toBeCalled();
       // fill in the last empty space
-      game.makeMove(2,2); // [1 2 1] [2 1 2] [2 1 1]
+      game.makeMove(2, 2); // [1 2 1] [2 1 2] [2 1 1]
       expect(game.isgameActive()).toBe(false);
       expect(gameEnded).toBeCalled();
     });
@@ -165,8 +165,8 @@ describe('TicTacToe Tests', () => {
       // check that board has spots filled out
 
       game.endGame();
-      for (let i = 1; i < 3; i++) {
-        for (let j = 1; j < 3; j++) {
+      for (let i = 1; i < 3; i += 1) {
+        for (let j = 1; j < 3; j += 1) {
           expect(game.getBoard()[i][j]).toBe(0);
         }
       }
