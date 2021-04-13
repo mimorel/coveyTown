@@ -149,11 +149,11 @@ makeMove(x:number, y:number): void {
 
   // check if move won game/ if we can keep playing
   if (this.isWin()) {
-    this.endGame;
+    this.endGame();
 
   }
   if (this.isFull()) {
-    this.endGame;
+    this.endGame();
   }
 
   //change to next player
