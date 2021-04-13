@@ -104,7 +104,7 @@ export default class CoveyTownController {
     this._sessions.push(theSession);
     this._players.push(newPlayer);
 
-    // add player to the leaderboard 
+    // add player to the leaderboard
     this._leaderboard.addPlayerToLeaderboard(newPlayer);
 
     // Create a video token for this user to join this town
@@ -157,6 +157,7 @@ export default class CoveyTownController {
    */
   addGameListener(listener: CoveyTownListener): void {
     this._TTTlisteners.push(listener);
+    console.log("step2");
   }
 
   /**
@@ -210,7 +211,11 @@ export default class CoveyTownController {
       try{
         const gameResponse = this._tictactoe.startGame(playerID);
 
-        this._TTTlisteners.forEach((listener) => listener.onjoinGame(playerID));
+        this._listeners.forEach((listener) => listener.onjoinGame(playerID));
+        this._listeners.forEach((listener) => this.addGameListener(listener));
+        console.log("step1");
+
+
 
         return gameResponse;
       }
@@ -246,8 +251,12 @@ export default class CoveyTownController {
 
   makeMove(x:number, y:number): number[][] {
     try{
+    console.log("mk0");
+
     this._tictactoe.makeMove(x,y);
-    this._TTTlisteners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
+    console.log("mk1");
+    this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
+    console.log("mk2");
 
     // is game over
     if (this.isgameActive() === false) {
@@ -266,6 +275,7 @@ export default class CoveyTownController {
   }
 
   endGame(): void{
+    try{
     const winner =  this.getWinner();
     const allScores = this.getScores();
     const leaderboardListing = allScores.find(e => e.userName === winner);
@@ -276,9 +286,15 @@ export default class CoveyTownController {
     else{
       this.updateLeaderboard(winner,leaderboardListing.score);
     }
+    this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
-    this._tictactoe.endGame();
-    this._TTTlisteners.forEach((listener) => listener.onGameEnd(winner));
   }
+  finally {
+    this._tictactoe.endGame();
+  }
+
+
+  }
+
 
 }

@@ -4,6 +4,7 @@ import Player from '../types/Player';
 import { CoveyTownList, ScoreList, UserLocation } from '../CoveyTypes';
 import CoveyTownListener from '../types/CoveyTownListener';
 import CoveyTownsStore from '../lib/CoveyTownsStore';
+import { request } from 'express';
 /**
  * The format of a request to join a Town in Covey.Town, as dispatched by the server middleware
  */
@@ -113,7 +114,7 @@ export interface GetBoardResponse {
   board: number[][];
 }
 
-export interface makeMoveRequest {
+export interface MakeMoveRequest {
   coveyTownID: string;
   player: string;
   x: string;
@@ -346,8 +347,9 @@ export async function getBoardHandler(requestData: InfoRequest): Promise<Respons
     }
   }
 
-export async function makeMoveHandler(requestData: makeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
+export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
       const townsStore = CoveyTownsStore.getInstance();
+      console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
       const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
       const _errorForBug = [[5,0,0],
                   [0,0,0],
@@ -411,10 +413,13 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
     ///TTT-specific events
     onjoinGame(playerId: string) {
       socket.emit('playerJoinedTTT', playerId);
+
     },
 
     onUpdateBoard(board: Number[][]) {
+      console.log("before");
       socket.emit("updateBoard", board);
+      console.log("UpdatedBoarddd");
     },
 
     onTurn(playerId: string) {

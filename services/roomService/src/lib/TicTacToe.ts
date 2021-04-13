@@ -70,7 +70,6 @@ startGame(playerID: string): string {
 
   this._player2Id = playerID;
   this._gameActive = true;
-  this.resetGameBoard();
   this._winningPlayer = "";
 
 
@@ -166,6 +165,7 @@ makeMove(x:number, y:number): void {
 
 //makes game inactive
 endGame(): void{
+  this.resetGameBoard();
   this._gameActive = false;
   this._player1Id = '';
   this._player2Id = '';
