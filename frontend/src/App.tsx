@@ -33,6 +33,7 @@ type CoveyAppUpdate =
   | { action: 'playerDisconnect'; player: Player }
   | { action: 'weMoved'; location: UserLocation }
   | { action: 'disconnect' }
+  | { action: 'updateBoard'; board:Number[][] }
   ;
 
 function defaultAppState(): CoveyAppState {
@@ -181,6 +182,15 @@ async function GameController(initData: TownJoinResponse,
     socket.emit('playerMovement', location);
     dispatchAppUpdate({ action: 'weMoved', location });
   };
+
+  socket.on('updateBoard', (board: Number[][]) => {
+    console.log("boardBefore");
+    console.log(board);
+    console.log("after");
+
+    //dispatchAppUpdate({ action: 'disconnect' });
+  });
+
 
   dispatchAppUpdate({
     action: 'doConnect',
