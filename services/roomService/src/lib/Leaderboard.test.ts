@@ -3,7 +3,7 @@ import CoveyTownsStore from './CoveyTownsStore';
 import Leaderboard from './Leaderboard';
 
 describe('Leaderboard', () => {
-  let testlb = new Leaderboard();
+  const testlb = new Leaderboard();
 
   const testPlayer = new Player('test player');
   const towns = CoveyTownsStore.getInstance();
@@ -11,14 +11,14 @@ describe('Leaderboard', () => {
 
   beforeEach(() => {
     testlb.allScores = [
-        { userID: '001', userName: 'user1', score: 5 },
-        { userID: '002', userName: 'user2', score: 2 },
-        { userID: '003', userName: 'user3', score: 1 },
-        { userID: '004', userName: 'user4', score: 4 },
-        { userID: '005', userName: 'user5', score: 1 },
-        { userID: '006', userName: 'user6', score: 3 },
-        { userID: '007', userName: 'user7', score: 6 },
-        { userID: '008', userName: 'user8', score: 2 }
+      { userID: '001', userName: 'user1', score: 5 },
+      { userID: '002', userName: 'user2', score: 2 },
+      { userID: '003', userName: 'user3', score: 1 },
+      { userID: '004', userName: 'user4', score: 4 },
+      { userID: '005', userName: 'user5', score: 1 },
+      { userID: '006', userName: 'user6', score: 3 },
+      { userID: '007', userName: 'user7', score: 6 },
+      { userID: '008', userName: 'user8', score: 2 },
     ];
   });
 
@@ -35,17 +35,17 @@ describe('Leaderboard', () => {
     it('Should do nothing if the added player is already in the room', () => {
       const initLB = town.leaderboard;
       // make sure player is on the leaderboard 
-      expect(initLB.allScores.filter((pinfo) => pinfo.userID == testPlayer.id).length).toBe(1);
+      expect(initLB.allScores.filter((pinfo) => pinfo.userID === testPlayer.id).length).toBe(1);
       town.leaderboard.addPlayerToLeaderboard(testPlayer);
-      expect(town.leaderboard.allScores.filter((pinfo) => pinfo.userID == testPlayer.id).length).toBe(1);
+      expect(town.leaderboard.allScores.filter((pinfo) => pinfo.userID === testPlayer.id).length).toBe(1);
       expect(initLB).toStrictEqual(town.leaderboard);
     });
-  })
+  });
 
   describe('updateScore', () => {
     it('Should update the given userIDs score', () => {
       const userID = '006';
-      const user = testlb.allScores.filter((userinfo) => userinfo.userID == userID);
+      const user = testlb.allScores.filter((userinfo) => userinfo.userID === userID);
       const initScore = user[0].score;
       testlb.updateScore(userID, 1);
       expect(user[0].score).toBe(initScore + 1);
@@ -53,7 +53,7 @@ describe('Leaderboard', () => {
     });
     it('Should use the given score to update', async () => {
       const userID = '004';
-      const user = testlb.allScores.filter((userinfo) => userinfo.userID == userID);
+      const user = testlb.allScores.filter((userinfo) => userinfo.userID === userID);
       const initScore = user[0].score;
       const score = 4;
       testlb.updateScore(userID, score);
@@ -77,19 +77,19 @@ describe('Leaderboard', () => {
     it('Should be in descending order', async () => {
       const leaderboard = testlb.getTopScores();
 
-      for (let i = 0; i < leaderboard.length - 1; i++) {
+      for (let i = 0; i < leaderboard.length - 1; i += 1) {
         expect(leaderboard[i].score).toBeGreaterThanOrEqual(leaderboard[i+1].score);
       }
     });
     it('Should return usernames (as opposed to userIDs)', async () => {
       const leaderboard = testlb.getTopScores();
-      const testPlayer = new Player('test player');
+      const testP = new Player('test player');
 
-      testlb.addPlayerToLeaderboard(testPlayer);
-      testlb.updateScore(testPlayer.id, leaderboard[0].score+5);
+      testlb.addPlayerToLeaderboard(testP);
+      testlb.updateScore(testP.id, leaderboard[0].score+5);
 
-      expect(testlb.getTopScores()[0].userName).toBe(testPlayer.userName);
-      expect(testlb.getTopScores()[0].userName).not.toBe(testPlayer.id);
+      expect(testlb.getTopScores()[0].userName).toBe(testP.userName);
+      expect(testlb.getTopScores()[0].userName).not.toBe(testP.id);
     });
   });
 });

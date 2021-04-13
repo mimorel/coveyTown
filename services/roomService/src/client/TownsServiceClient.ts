@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import assert from 'assert';
-import { ScoreList, UserLocation } from '../CoveyTypes';
+import { UserLocation } from '../CoveyTypes';
 import { LeaderboardRequest, LeaderboardResponse, StartGameRequest,
   StartGameResponse,InfoRequest, InfoResponse, PlayerResponse, GetBoardResponse, MakeMoveRequest
 } from '../requestHandlers/CoveyTownRequestHandlers';
@@ -181,7 +181,6 @@ export default class TownsServiceClient {
 
   async makeMove(requestData: MakeMoveRequest): Promise<GetBoardResponse> {
     const responseWrapper = await this._axios.post(`/tictactoe/${requestData.coveyTownID}/${requestData.player}/move`);
-    console.log(responseWrapper.data);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
