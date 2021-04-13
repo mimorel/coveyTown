@@ -180,6 +180,7 @@ async function GameController(initData: TownJoinResponse,
   });
   socket.on('disconnect', () => {
     dispatchAppUpdate({ action: 'disconnect' });
+    console.log("dfsaf");
   });
   const emitMovement = (location: UserLocation) => {
     socket.emit('playerMovement', location);
