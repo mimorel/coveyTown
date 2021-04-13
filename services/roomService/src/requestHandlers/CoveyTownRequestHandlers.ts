@@ -4,7 +4,7 @@ import Player from '../types/Player';
 import { CoveyTownList, ScoreList, UserLocation } from '../CoveyTypes';
 import CoveyTownListener from '../types/CoveyTownListener';
 import CoveyTownsStore from '../lib/CoveyTownsStore';
-import { request } from 'express';
+
 /**
  * The format of a request to join a Town in Covey.Town, as dispatched by the server middleware
  */
@@ -121,11 +121,6 @@ export interface MakeMoveRequest {
   y: string;
 }
 
-export interface InfoResponse{
-
-}
-
-
 /**
  * Envelope that wraps any response from the server
  */
@@ -225,14 +220,14 @@ export async function leaderboardHandler(requestData: LeaderboardRequest): Promi
     return {
       isOK: false,
       message: 'Invalid Town ID',
-    }
+    };
   }
   return {
     isOK: true,
     response: {
-      scores: leaderboard
+      scores: leaderboard, 
     },
-  }
+  };
 }
 
 export async function updateLeaderboardHandler(requestData: UpdateLeaderboardRequest): Promise<ResponseEnvelope<LeaderboardResponse>> {
@@ -242,147 +237,147 @@ export async function updateLeaderboardHandler(requestData: UpdateLeaderboardReq
     return {
       isOK: false,
       message: 'Invalid Town ID',
-    }
+    };
   }
   return {
     isOK: true,
     response: {
-      scores: leaderboard
+      scores: leaderboard, 
     },
-  }
+  };
 }
 
-/**  related to tictactoe**/
+/**  
+ * related to tictactoe
+*/
 export async function startGameHandler(requestData: StartGameRequest): Promise<ResponseEnvelope<StartGameResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
-  try{
-  const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
-  return {
-    isOK: true,
-    response: {
-      gameStatus: game
-    },
-    message: 'game has been started',
-  }
-}
-
-  catch(e) {
+  try { 
+    const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
+    return {
+      isOK: true,
+      response: {
+        gameStatus: game, 
+      },
+      message: 'game has been started',
+    };
+  } catch (e) {
     return {
       isOK: false,
       message: 'Unable to start game',
-    }
+    }; 
   }
-  }
+}
 
-export async function isgameActiveHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
-      const townsStore = CoveyTownsStore.getInstance();
-      const game = townsStore.isgameActive(requestData.coveyTownID);
-      if (!game) {
-        return {
-          isOK: false,
-          message: 'Game is not active',
-        }
-      }
-      return {
-        isOK: true,
-        response: {},
-        message: 'Game is active',
-    }
+export async function isgameActiveHandler(requestData: InfoRequest): Promise<ResponseEnvelope<Record<string, never>>> {
+  const townsStore = CoveyTownsStore.getInstance();
+  const game = townsStore.isgameActive(requestData.coveyTownID);
+  if (!game) {
+    return {
+      isOK: false,
+      message: 'Game is not active',
+    }; 
   }
+  return {
+    isOK: true,
+    response: {},
+    message: 'Game is active',
+  }; 
+}
 
 export async function currentPlayerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
-      const townsStore = CoveyTownsStore.getInstance();
-      const game = townsStore.currentPlayer(requestData.coveyTownID);
+  const townsStore = CoveyTownsStore.getInstance();
+  const game = townsStore.currentPlayer(requestData.coveyTownID);
 
-      if ("") {
-        return {
-          isOK: false,
-          message: 'No current player',
-        }
-      }
-      return {
-        isOK: true,
-        response: {
-          player: game,
-        },
-    }
+  if (game === '') {
+    return {
+      isOK: false,
+      message: 'No current player',
+    }; 
   }
+  return {
+    isOK: true,
+    response: {
+      player: game,
+    },
+  };
+}
 
-  export async function getWinnerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
-        const townsStore = CoveyTownsStore.getInstance();
-        const game = townsStore.getWinner(requestData.coveyTownID);
-        if ("") {
-          return {
-            isOK: false,
-            message: 'No current winner',
-          }
-        }
-        return {
-          isOK: true,
-          response: {
-            player: game,
-          },
-      }
-    }
+export async function getWinnerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
+  const townsStore = CoveyTownsStore.getInstance();
+  const game = townsStore.getWinner(requestData.coveyTownID);
+  if (game === '') {
+    return {
+      isOK: false,
+      message: 'No current winner',
+    };
+  }
+  return {
+    isOK: true,
+    response: {
+      player: game,
+    },
+  }; 
+}
 
 
 export async function getBoardHandler(requestData: InfoRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
-      const townsStore = CoveyTownsStore.getInstance();
-      const game = townsStore.getBoard(requestData.coveyTownID);
-      const _errorForBug = [[5,0,0],
-                  [0,0,0],
-                  [0,0,0]];
-      if (game === _errorForBug ) {
-        return {
-          isOK: false,
-          message: 'Could not find game',
-        }
-      }
-
-      return {
-        isOK: true,
-        response: {
-          board:game,
-        },
-    }
+  const townsStore = CoveyTownsStore.getInstance();
+  const game = townsStore.getBoard(requestData.coveyTownID);
+  const errorForBug = [[5, 0, 0], 
+    [0, 0, 0], 
+    [0, 0, 0]];
+  if (game === errorForBug ) {
+    return {
+      isOK: false, 
+      message: 'Could not find game', 
+    }; 
   }
+
+  return {
+    isOK: true, 
+    response: {
+      board: game, 
+    },
+  }; 
+}
 
 export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
-      const townsStore = CoveyTownsStore.getInstance();
-      console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
-      const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
-      const _errorForBug = [[5,0,0],
-                  [0,0,0],
-                  [0,0,0]];
-      if (game === _errorForBug ) {
-        return {
-          isOK: false,
-          message: 'Could not make move',
-        }
-      }
-      return {
-        isOK: true,
-        response: {
-          board: game,
-        },
-    }
+  const townsStore = CoveyTownsStore.getInstance();
+  console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
+  const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
+  const errorForBug = [[5, 0, 0], 
+    [0, 0, 0], 
+    [0, 0, 0]];
+  if (game === errorForBug ) {
+    return {
+      isOK: false,
+      message: 'Could not make move',
+    }; 
   }
+  return {
+    isOK: true, 
+    response: {
+      board: game,
+    },
+  }; 
+}
 
-export async function endGameHandler(requestData: InfoRequest): Promise<ResponseEnvelope<InfoResponse>> {
-      const townsStore = CoveyTownsStore.getInstance();
-      const game = townsStore.endGame(requestData.coveyTownID);
-      if (!game) {
-        return {
-          isOK: false,
-          message: 'Could not find game',
-        }
-      }
-      return {
-        isOK: true,
-        response: {},
-        message:'Game has ended',
-    }
+export async function endGameHandler(requestData: InfoRequest): Promise<ResponseEnvelope<Record<string, never>>> {
+  const townsStore = CoveyTownsStore.getInstance();
+  const game = townsStore.endGame(requestData.coveyTownID);
+  if (!game) {
+    return {
+      isOK: false,
+      message: 'Could not find game',
+    }; 
   }
+  return {
+    isOK: true,
+    response: {},
+    message:'Game has ended',
+  }; 
+}
 
 
 
@@ -410,20 +405,20 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
       socket.disconnect(true);
     },
 
-    ///TTT-specific events
+    // TTT-specific events
     onjoinGame(playerId: string) {
       socket.emit('playerJoinedTTT', playerId);
 
     },
 
-    onUpdateBoard(board: Number[][]) {
-      console.log("before");
-      socket.emit("updateBoard", board);
-      console.log("UpdatedBoarddd");
+    onUpdateBoard(board: number[][]) {
+      console.log('before');
+      socket.emit('updateBoard', board);
+      console.log('UpdatedBoarddd');
     },
 
     onTurn(playerId: string) {
-      socket.emit("playersTurn", playerId);
+      socket.emit('playersTurn', playerId);
     },
 
     onGameEnd(winner:string){
@@ -476,8 +471,8 @@ export function townSubscriptionHandler(socket: Socket): void {
     townController.updatePlayerLocation(s.player, movementData);
   });
 
-// Register an event listener for the client socket: if a player starts a game of
-// TTT, add a listener
+  // Register an event listener for the client socket: if a player starts a game of
+  // TTT, add a listener
   socket.on('startTTT', () => {
     townController.addGameListener(listener);
   });

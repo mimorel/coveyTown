@@ -17,7 +17,7 @@ import {
   getWinnerHandler,
   getBoardHandler,
   makeMoveHandler,
-  endGameHandler
+  endGameHandler, 
 } from '../requestHandlers/CoveyTownRequestHandlers';
 import { logError } from '../Utils';
 
@@ -140,7 +140,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * Update the leaderboard of a town
    */
-   app.patch('/leaderboard/:townID', BodyParser.json(), async (req, res) => {
+  app.patch('/leaderboard/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await updateLeaderboardHandler({
         coveyTownID: req.params.townID,
@@ -160,7 +160,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     Start the tictactoe game for a town
-  **/
+  */
   app.post('/tictactoe/:townID/:playerID', BodyParser.json(), async (req, res) => {
     try {
       const result = await startGameHandler({
@@ -181,7 +181,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     is tictactoe game active for a town
-  **/
+  */
   app.get('/tictactoeActive/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await isgameActiveHandler({
@@ -200,7 +200,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     Who's turn is it for this town's tictactoe game
-  **/
+  */
   app.get('/tictactoe/curplayer/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await currentPlayerHandler({
@@ -219,7 +219,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     Who was the winner of the last game
-  **/
+  */
   app.get('/tictactoeWinner/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await getWinnerHandler({
@@ -238,7 +238,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     Get current board for town's tictactoe
-  **/
+  */
   app.get('/tictactoeBoard/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await getBoardHandler({
@@ -258,7 +258,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     Make a move on a town's tictactoe
-  **/
+  */
   app.post('/tictactoe/:townID/:playerID/move', BodyParser.json(), async (req, res) => {
     try {
       const result = await makeMoveHandler({
@@ -281,7 +281,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   /**
     End a town's tictactoe
-  **/
+  */
   app.delete('/tictactoe/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await endGameHandler({
@@ -309,5 +309,5 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   const tttSocketServer = new io.Server(http, { cors: { origin: '*' } });
   socketServer.on('connection', tttSubscriptionHandler);
   return socketServer;
-  **/
+  */
 }

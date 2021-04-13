@@ -25,7 +25,7 @@ function mockCoveyListener(): CoveyTownListener {
       mockCoveyListenerOtherFns(playerID);
     },
 
-    onUpdateBoard(board: Number[][]): void {
+    onUpdateBoard(board: number[][]): void {
       mockCoveyListenerOtherFns(board);
     },
 
