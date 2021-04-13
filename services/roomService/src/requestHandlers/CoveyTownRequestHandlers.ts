@@ -225,7 +225,7 @@ export async function leaderboardHandler(requestData: LeaderboardRequest): Promi
   return {
     isOK: true,
     response: {
-      scores: leaderboard, 
+      scores: leaderboard,
     },
   };
 }
@@ -242,22 +242,22 @@ export async function updateLeaderboardHandler(requestData: UpdateLeaderboardReq
   return {
     isOK: true,
     response: {
-      scores: leaderboard, 
+      scores: leaderboard,
     },
   };
 }
 
-/**  
+/**
  * related to tictactoe
 */
 export async function startGameHandler(requestData: StartGameRequest): Promise<ResponseEnvelope<StartGameResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
-  try { 
+  try {
     const game = townsStore.startGame(requestData.coveyTownID, requestData.playerID);
     return {
       isOK: true,
       response: {
-        gameStatus: game, 
+        gameStatus: game,
       },
       message: 'game has been started',
     };
@@ -265,7 +265,7 @@ export async function startGameHandler(requestData: StartGameRequest): Promise<R
     return {
       isOK: false,
       message: 'Unable to start game',
-    }; 
+    };
   }
 }
 
@@ -276,13 +276,13 @@ export async function isgameActiveHandler(requestData: InfoRequest): Promise<Res
     return {
       isOK: false,
       message: 'Game is not active',
-    }; 
+    };
   }
   return {
     isOK: true,
     response: {},
     message: 'Game is active',
-  }; 
+  };
 }
 
 export async function currentPlayerHandler(requestData: InfoRequest): Promise<ResponseEnvelope<PlayerResponse>> {
@@ -293,7 +293,7 @@ export async function currentPlayerHandler(requestData: InfoRequest): Promise<Re
     return {
       isOK: false,
       message: 'No current player',
-    }; 
+    };
   }
   return {
     isOK: true,
@@ -317,50 +317,50 @@ export async function getWinnerHandler(requestData: InfoRequest): Promise<Respon
     response: {
       player: game,
     },
-  }; 
+  };
 }
 
 
 export async function getBoardHandler(requestData: InfoRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
   const game = townsStore.getBoard(requestData.coveyTownID);
-  const errorForBug = [[5, 0, 0], 
-    [0, 0, 0], 
+  const errorForBug = [[5, 0, 0],
+    [0, 0, 0],
     [0, 0, 0]];
   if (game === errorForBug ) {
     return {
-      isOK: false, 
-      message: 'Could not find game', 
-    }; 
+      isOK: false,
+      message: 'Could not find game',
+    };
   }
 
   return {
-    isOK: true, 
+    isOK: true,
     response: {
-      board: game, 
+      board: game,
     },
-  }; 
+  };
 }
 
 export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
   console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
   const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
-  const errorForBug = [[5, 0, 0], 
-    [0, 0, 0], 
+  const errorForBug = [[5, 0, 0],
+    [0, 0, 0],
     [0, 0, 0]];
   if (game === errorForBug ) {
     return {
       isOK: false,
       message: 'Could not make move',
-    }; 
+    };
   }
   return {
-    isOK: true, 
+    isOK: true,
     response: {
       board: game,
     },
-  }; 
+  };
 }
 
 export async function endGameHandler(requestData: InfoRequest): Promise<ResponseEnvelope<Record<string, never>>> {
@@ -370,13 +370,13 @@ export async function endGameHandler(requestData: InfoRequest): Promise<Response
     return {
       isOK: false,
       message: 'Could not find game',
-    }; 
+    };
   }
   return {
     isOK: true,
     response: {},
     message:'Game has ended',
-  }; 
+  };
 }
 
 
@@ -413,6 +413,7 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
 
     onUpdateBoard(board: number[][]) {
       console.log('before');
+      console.log(board);
       socket.emit('updateBoard', board);
       console.log('UpdatedBoarddd');
     },

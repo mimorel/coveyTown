@@ -138,6 +138,9 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
         nextState.nearbyPlayers = state.nearbyPlayers;
       }
       break;
+    case 'updateBoard':
+        console.log("app.tsx, switch");
+        break;
     case 'disconnect':
       state.socket?.disconnect();
       return defaultAppState();
@@ -183,9 +186,12 @@ async function GameController(initData: TownJoinResponse,
     dispatchAppUpdate({ action: 'weMoved', location });
   };
 
-  socket.on('updateBoard', () => {
+  socket.on('updateBoard', (board: Number[][]) => {
     console.log("boardBefore");
-    //console.log(board);
+
+    dispatchAppUpdate({ action: 'updateBoard', board: board});
+
+    console.log(board);
     console.log("after");
 
     //dispatchAppUpdate({ action: 'disconnect' });
