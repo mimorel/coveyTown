@@ -190,11 +190,11 @@ async function GameController(initData: TownJoinResponse,
 
   socket.on('updateBoard', (board: number[][]) => {
     console.log("boardBefore");
-    dispatchAppUpdate({ action: 'updateBoard', board: board});
+    dispatchAppUpdate({ action: 'updateBoard', board});
     console.log(board);
     console.log("after");
 
-    //dispatchAppUpdate({ action: 'disconnect' });
+    // dispatchAppUpdate({ action: 'disconnect' });
   });
 
 

@@ -79,11 +79,11 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
   });
 
   const updateBoardPromise = new Promise<RemoteServerPlayer>((resolve) => {
-      socket.on('updateBoard', (board: RemoteServerPlayer) => {
-        console.log("testUtils.ts file");
-        resolve(board);
-      });
+    socket.on('updateBoard', (board: RemoteServerPlayer) => {
+      console.log('testUtils.ts file');
+      resolve(board);
     });
+  });
 
   createdSocketClients.push(socket);
   return {

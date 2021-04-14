@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import assert from 'assert';
 import { AddressInfo } from 'net';
 
-import TownsServiceClient, { TownListResponse } from './TownsServiceClient';
+import TownsServiceClient, { TownListResponse, TownJoinResponse } from './TownsServiceClient';
 import addTownRoutes from '../router/towns';
 
 type TestTownData = {
@@ -237,4 +237,281 @@ describe('TownsServiceAPIREST', () => {
 
     });
   });
+
+  /**
+   * Beginning of new tests 
+   */
+  describe('LeaderboardAPI', () => {
+    it('Throws an error if the town does not exist', async () => {
+      await createTownForTesting(undefined, true);
+      await expect(apiClient.leaderboard({ coveyTownID: nanoid() })).rejects.toThrow();
+    });
+    it('Returns just the top 10 scores in a room', async () => {
+      const town = await createTownForTesting(undefined, true);
+      let lb = await apiClient.leaderboard({ coveyTownID: town.coveyTownID });
+      expect(lb.scores.length).toBe(0);
+      await apiClient.joinTown({ userName: 'user1', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user2', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user3', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user4', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user5', coveyTownID: town.coveyTownID });
+      lb = await apiClient.leaderboard({ coveyTownID: town.coveyTownID });
+      expect(lb.scores.length).toBe(5);
+      await apiClient.joinTown({ userName: 'user6', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user7', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user8', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user9', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user10', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user11', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user12', coveyTownID: town.coveyTownID });
+      const joinTownRes = await apiClient.joinTown({ userName: 'user last', coveyTownID: town.coveyTownID });
+      lb = await apiClient.leaderboard({ coveyTownID: town.coveyTownID });
+      if (joinTownRes !== undefined) {
+        const players = joinTownRes.currentPlayers;
+        expect(players.length).toBeGreaterThan(10);
+      }
+      expect(lb.scores.length).toBe(10);
+    });
+  });  
+
+  describe('startGameAPI', () => {
+    // Should it throw? 
+    it('Returns message unable to find town if invalid town ID', async () => {
+      const town = await createTownForTesting(undefined, true);
+      const p1 = await apiClient.joinTown({ userName: 'user', coveyTownID: town.coveyTownID });
+      const res = await apiClient.startGame({ coveyTownID: nanoid(), playerID: p1.coveyUserID });
+      expect(res.gameStatus).toBe('Unable to find town');
+    });
+    it('Waits for player 2 if player 1 is joining', async () => {
+      const town = await createTownForTesting(undefined, true);
+      const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      const start = await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      expect(start.gameStatus).toBe('Waiting for player2');
+    });
+    it('Starts game if player 2 is joining', async () => {
+      const town = await createTownForTesting(undefined, true);
+      const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      const p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      const start = await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      expect(start.gameStatus).toBe('Waiting for player2');
+      const start2 = await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+      expect(start2.gameStatus).toBe(`X:${p1.coveyUserID}, Y: ${p2.coveyUserID}`);
+    });
+  }); 
+
+  describe('isgameActiveAPI', () => {
+    // should inactive throw?
+    it('Game is inactive (throws) if game has not started or if only one player has joined', async () => {
+      const town = await createTownForTesting(undefined, true);
+      await expect(apiClient.isgameActive({ coveyTownID: town.coveyTownID })).rejects.toThrow(); 
+      const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await expect(apiClient.isgameActive({ coveyTownID: town.coveyTownID })).rejects.toThrow(); 
+    });
+    it('Game is active if both players have joined', async () => {
+      const town = await createTownForTesting(undefined, true);
+      const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      const p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+      await apiClient.isgameActive({ coveyTownID: town.coveyTownID });
+    });
+    it('Game becomes inactive (throws) right after a game has ended', async () => {      
+      const town = await createTownForTesting(undefined, true);
+      const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      const p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+
+      // should resolve when game is active
+      await apiClient.isgameActive({ coveyTownID: town.coveyTownID });
+
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '0', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '2', y: '2' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '2' });
+
+      // should resolve when game is active
+      await apiClient.isgameActive({ coveyTownID: town.coveyTownID });
+
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '1', y: '1' });
+
+      // game should now be inactive - so this should throw
+      await expect(apiClient.isgameActive({ coveyTownID: town.coveyTownID })).rejects.toThrow(); 
+    });
+  }); 
+
+  describe('currentPlayerAPI', () => {
+    let town: TestTownData;
+    let p1: TownJoinResponse;
+    let p2: TownJoinResponse;
+
+    beforeEach(async ( ) => {
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+    });
+    it('Gets the current player', async () => {
+      let curplayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      expect(curplayer.player).toBe(p1.coveyUserID);
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: curplayer.player, x: '0', y: '0' });
+      curplayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      expect(curplayer.player).toBe(p2.coveyUserID);
+    });
+    it('Throws if there are no players yet', async () => {
+      // players are in the room but haven't joined the game
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+
+      // should throw since there are no users playing the game
+      await expect(apiClient.currentPlayer({ coveyTownID: town.coveyTownID })).rejects.toThrow();
+    });
+  }); 
+
+  describe('getWinnerAPI', () => {
+    let town: TestTownData;
+    let p1: TownJoinResponse;
+    let p2: TownJoinResponse;
+
+    beforeEach(async ( ) => {
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '0', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '2', y: '2' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '2' });
+    });
+    it('Throws an error if the town does not exist', async () => {
+      await expect(apiClient.getWinner({ coveyTownID: nanoid() })).rejects.toThrow();
+    });
+    it('Throws an error if there is no winner yet', async () => {
+      await expect(apiClient.getWinner({ coveyTownID: town.coveyTownID })).rejects.toThrow();
+    });
+    it('Returns the winner of a game', async () => {
+      await expect(apiClient.getWinner({ coveyTownID: town.coveyTownID })).rejects.toThrow();
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '1', y: '1' });
+
+      const winner = await apiClient.getWinner({ coveyTownID: town.coveyTownID });
+      expect(winner.player).toBe(p1.coveyUserID);
+    });
+  }); 
+
+  describe('getBoardAPI', () => {
+    let town: TestTownData;
+    let p1: TownJoinResponse;
+    let p2: TownJoinResponse;
+
+    beforeEach(async ( ) => {
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+    });
+    it('Shows the updated board', async () => {
+      const initBoard = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      for (let i = 0; i < 3; i += 1) {
+        for (let j = 0; j < 3; j += 1) {
+          expect(initBoard.board[i][j]).toBe(0);
+        }
+      }
+      let currPlayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: currPlayer.player, x: '1', y: '1' });
+      let board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      expect(board.board[1][1]).toBe(1);
+
+      currPlayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: currPlayer.player, x: '1', y: '2' });
+      board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      expect(board.board[1][2]).toBe(2);
+    });
+    it('Throws if the room is not found (invalid ID)', async () => {
+      await expect(apiClient.getBoard({ coveyTownID: nanoid() })).rejects.toThrow();
+    });
+  }); 
+
+  describe('makeMoveAPI', () => {
+    let town: TestTownData;
+    let p1: TownJoinResponse;
+    let p2: TownJoinResponse;
+
+    beforeEach(async ( ) => {
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+    });
+    it('Makes a move for a player', async () => {
+      let curplayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      let board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      let x = 0;
+      let y = 0;
+      expect(board.board[x][y]).toBe(0);
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: curplayer.player, x: String(x), y: String(y) });
+
+      board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      expect(board.board[x][y]).toBe(1);
+
+      curplayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      x = 2;
+      y = 1;
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: curplayer.player, x: String(x), y: String(y) });
+
+      board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      expect(board.board[x][y]).toBe(2);
+    });
+    it('Throws error if the selected spot is already filled', async () => {
+      const curplayer = await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+      let board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      const x = 0;
+      const y = 0;
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: curplayer.player, x: String(x), y: String(y) });
+
+      board = await apiClient.getBoard({ coveyTownID: town.coveyTownID });
+      expect(board.board[0][0]).toBe(1);
+      await expect(apiClient.makeMove({ coveyTownID: town.coveyTownID, player: curplayer.player, x: String(x), y: String(y) })).rejects.toThrow();
+    });
+  }); 
+
+  describe('endGameAPI', () => {
+    let town: TestTownData;
+    let p1: TownJoinResponse;
+    let p2: TownJoinResponse;
+
+    beforeEach(async () => {
+      town = await createTownForTesting(undefined, true);
+      p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
+      p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
+      await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p2.coveyUserID });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '0', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '0' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p1.coveyUserID, x: '2', y: '2' });
+      await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: p2.coveyUserID, x: '1', y: '2' });
+    });
+    it('Sets the game as inactive', async () => {
+      // should resolve
+      await apiClient.isgameActive({ coveyTownID: town.coveyTownID });
+
+      await apiClient.endGame({ coveyTownID: town.coveyTownID });
+      await expect(apiClient.isgameActive({ coveyTownID: town.coveyTownID })).rejects.toThrow();
+    });
+    it('Refreshes current player (there should now be none)', async () => {
+      // should resolve
+      await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
+
+      await apiClient.endGame({ coveyTownID: town.coveyTownID });
+      await expect(apiClient.currentPlayer({ coveyTownID: town.coveyTownID })).rejects.toThrow();
+    });
+    it('Throws if the room is not found', async () => {
+      await expect(apiClient.endGame({ coveyTownID: nanoid() })).rejects.toThrow();
+    });
+  }); 
 });
