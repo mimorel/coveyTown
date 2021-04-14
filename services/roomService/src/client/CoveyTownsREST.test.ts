@@ -244,7 +244,7 @@ describe('TownsServiceAPIREST', () => {
   describe('LeaderboardAPI', () => {
     it('Throws an error if the town does not exist', async () => {
       await createTownForTesting(undefined, true);
-      await expect(apiClient.leaderboard({ coveyTownID: nanoid(), })).rejects.toThrow();
+      await expect(apiClient.leaderboard({ coveyTownID: nanoid() })).rejects.toThrow();
     });
     it('Returns just the top 10 scores in a room', async () => {
       const town = await createTownForTesting(undefined, true);
@@ -257,10 +257,14 @@ describe('TownsServiceAPIREST', () => {
       await apiClient.joinTown({ userName: 'user5', coveyTownID: town.coveyTownID });
       lb = await apiClient.leaderboard({ coveyTownID: town.coveyTownID });
       expect(lb.scores.length).toBe(5);
-      let joinTownRes;
-      for (let i = 6; i < 15; i += 1) {
-        joinTownRes = await apiClient.joinTown({ userName: `user${i}`, coveyTownID: town.coveyTownID });
-      }
+      await apiClient.joinTown({ userName: 'user6', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user7', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user8', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user9', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user10', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user11', coveyTownID: town.coveyTownID });
+      await apiClient.joinTown({ userName: 'user12', coveyTownID: town.coveyTownID });
+      const joinTownRes = await apiClient.joinTown({ userName: 'user last', coveyTownID: town.coveyTownID });
       lb = await apiClient.leaderboard({ coveyTownID: town.coveyTownID });
       if (joinTownRes !== undefined) {
         const players = joinTownRes.currentPlayers;
@@ -275,13 +279,12 @@ describe('TownsServiceAPIREST', () => {
     it('Returns message unable to find town if invalid town ID', async () => {
       const town = await createTownForTesting(undefined, true);
       const p1 = await apiClient.joinTown({ userName: 'user', coveyTownID: town.coveyTownID });
-      const res = await apiClient.startGame({ coveyTownID: nanoid(), playerID: p1.coveyUserID })
+      const res = await apiClient.startGame({ coveyTownID: nanoid(), playerID: p1.coveyUserID });
       expect(res.gameStatus).toBe('Unable to find town');
     });
     it('Waits for player 2 if player 1 is joining', async () => {
       const town = await createTownForTesting(undefined, true);
       const p1 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p1' });
-      const p2 = await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: 'p2' });
       const start = await apiClient.startGame({ coveyTownID: town.coveyTownID, playerID: p1.coveyUserID });
       expect(start.gameStatus).toBe('Waiting for player2');
     });
@@ -365,7 +368,6 @@ describe('TownsServiceAPIREST', () => {
 
       // should throw since there are no users playing the game
       await expect(apiClient.currentPlayer({ coveyTownID: town.coveyTownID })).rejects.toThrow();
-      ;
     });
   }); 
 
@@ -498,14 +500,14 @@ describe('TownsServiceAPIREST', () => {
       // should resolve
       await apiClient.isgameActive({ coveyTownID: town.coveyTownID });
 
-      const end = await apiClient.endGame({ coveyTownID: town.coveyTownID });
+      await apiClient.endGame({ coveyTownID: town.coveyTownID });
       await expect(apiClient.isgameActive({ coveyTownID: town.coveyTownID })).rejects.toThrow();
     });
     it('Refreshes current player (there should now be none)', async () => {
       // should resolve
       await apiClient.currentPlayer({ coveyTownID: town.coveyTownID });
 
-      const end = await apiClient.endGame({ coveyTownID: town.coveyTownID });
+      await apiClient.endGame({ coveyTownID: town.coveyTownID });
       await expect(apiClient.currentPlayer({ coveyTownID: town.coveyTownID })).rejects.toThrow();
     });
     it('Throws if the room is not found', async () => {
