@@ -327,7 +327,7 @@ export async function getBoardHandler(requestData: InfoRequest): Promise<Respons
   const errorForBug = [[5, 0, 0],
     [0, 0, 0],
     [0, 0, 0]];
-  if (game === errorForBug ) {
+  if (game[0][0] === errorForBug[0][0]) {
     return {
       isOK: false,
       message: 'Could not find game',
@@ -349,7 +349,7 @@ export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<Res
   const errorForBug = [[5, 0, 0],
     [0, 0, 0],
     [0, 0, 0]];
-  if (game === errorForBug ) {
+  if (game[0][0] === errorForBug[0][0]) {
     return {
       isOK: false,
       message: 'Could not make move',

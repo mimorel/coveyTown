@@ -180,7 +180,7 @@ export default class TownsServiceClient {
   }
 
   async makeMove(requestData: MakeMoveRequest): Promise<GetBoardResponse> {
-    const responseWrapper = await this._axios.post(`/tictactoe/${requestData.coveyTownID}/${requestData.player}/move`);
+    const responseWrapper = await this._axios.post(`/tictactoe/${requestData.coveyTownID}/${requestData.player}/move`, requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
