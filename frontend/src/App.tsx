@@ -33,7 +33,7 @@ type CoveyAppUpdate =
   | { action: 'playerDisconnect'; player: Player }
   | { action: 'weMoved'; location: UserLocation }
   | { action: 'disconnect' }
-  | { action: 'updateBoard'; board:Number[][] }
+  | { action: 'updateBoard'; board:number[][] }
   ;
 
 function defaultAppState(): CoveyAppState {
@@ -174,23 +174,23 @@ async function GameController(initData: TownJoinResponse,
     if (player._id !== gamePlayerID) {
       dispatchAppUpdate({ action: 'playerMoved', player: Player.fromServerPlayer(player) });
     }
+    console.log("playermoved");
   });
   socket.on('playerDisconnect', (player: ServerPlayer) => {
     dispatchAppUpdate({ action: 'playerDisconnect', player: Player.fromServerPlayer(player) });
   });
   socket.on('disconnect', () => {
     dispatchAppUpdate({ action: 'disconnect' });
+    console.log("dfsaf");
   });
   const emitMovement = (location: UserLocation) => {
     socket.emit('playerMovement', location);
     dispatchAppUpdate({ action: 'weMoved', location });
   };
 
-  socket.on('updateBoard', (board: Number[][]) => {
+  socket.on('updateBoard', (board: number[][]) => {
     console.log("boardBefore");
-
     dispatchAppUpdate({ action: 'updateBoard', board: board});
-
     console.log(board);
     console.log("after");
 
