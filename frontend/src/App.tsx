@@ -174,7 +174,7 @@ async function GameController(initData: TownJoinResponse,
     if (player._id !== gamePlayerID) {
       dispatchAppUpdate({ action: 'playerMoved', player: Player.fromServerPlayer(player) });
     }
-    console.log("playermoved");
+    // console.log("playermoved");
   });
   socket.on('playerDisconnect', (player: ServerPlayer) => {
     dispatchAppUpdate({ action: 'playerDisconnect', player: Player.fromServerPlayer(player) });
@@ -188,14 +188,14 @@ async function GameController(initData: TownJoinResponse,
     dispatchAppUpdate({ action: 'weMoved', location });
   };
 
-  socket.on('updateBoard', (board: number[][]) => {
-    console.log("boardBefore");
-    dispatchAppUpdate({ action: 'updateBoard', board});
-    console.log(board);
-    console.log("after");
+  // socket.on('updateBoard', (board: number[][]) => {
+  //   console.log("boardBefore");
+  //   dispatchAppUpdate({ action: 'updateBoard', board});
+  //   console.log(board);
+  //   console.log("after");
 
-    // dispatchAppUpdate({ action: 'disconnect' });
-  });
+  //   // dispatchAppUpdate({ action: 'disconnect' });
+  // });
 
 
   dispatchAppUpdate({
