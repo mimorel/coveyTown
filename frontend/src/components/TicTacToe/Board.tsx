@@ -226,17 +226,17 @@ function Game({ townID, playerID }: GameComponentProps) {
         <div className="game-board">
           <div className="board-row">
             {squares.slice(0,3).map((result, index) => 
-             <Square key={1} value={squares[index]}  onClick={()=>squareClickHandler(index)}/>
+             <Square key={Math.random()} value={squares[index]}  onClick={()=>squareClickHandler(index)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(3,6).map((result, index) => 
-             <Square key={2} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
+             <Square key={Math.random()} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(6,9).map((result, index) => 
-             <Square key={3} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
+             <Square key={Math.random()} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
             )}
           </div>
         </div>
