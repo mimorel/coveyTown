@@ -472,7 +472,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // Register an event listener for the client socket: if a player starts a game of
   // TTT, add a listener
   socket.on('startTTT', () => {
-    townController.addGameListener(listener);
+    //townController.addGameListener(listener);
   });
 
   // Register an event listener for the client socket: if a player starts a game of
