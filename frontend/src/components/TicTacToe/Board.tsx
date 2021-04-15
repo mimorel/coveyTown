@@ -7,11 +7,9 @@ import {
 import { io, Socket } from 'socket.io-client';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
-
 interface SquareComponentProps {
   value: number,
   onClick: () => Promise<void>,
-  // key: number
 }
 
 function Square({value, onClick}: SquareComponentProps ): JSX.Element {
@@ -19,8 +17,8 @@ function Square({value, onClick}: SquareComponentProps ): JSX.Element {
 
   return (
     <button type="button" className="square" onClick={onClick}>
-      {value}
-    </button>
+    {value}    
+</button>
   );
 }
 
@@ -52,10 +50,9 @@ function Game({ townID, playerID }: GameComponentProps) {
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "X" : "O";
   const winner = null;
-  const  { apiClient, players, sessionToken } = useCoveyAppState();
+  const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
-  const socket = io(url!, { auth: { token: sessionToken, coveyTownID: townID } });
 
    // start game call here
    async function startGame() {
@@ -75,8 +72,8 @@ function Game({ townID, playerID }: GameComponentProps) {
     }
   }
 
- // what is passed from the backend
-  socket.on('updateBoard', (board: [][]) => {
+  useEffect(() => {
+    socket!.on('updateBoard', (board: [][]) => {
     console.log(`sessiontoken is ${sessionToken}`);
     console.log(board);
     const merged = [].concat(...board);
@@ -84,7 +81,8 @@ function Game({ townID, playerID }: GameComponentProps) {
     setSquares(merged);
     // call getWhoseTurn here
    
-  });
+  })
+}, [socket]);
 
 
 
@@ -152,36 +150,6 @@ function Game({ townID, playerID }: GameComponentProps) {
   }
 
 
-  // function renderSquare(i) {
-  //   return (
-  //     <Square
-  //       value={squares[i]}
-  //       onClick={() => {
-  //         if (squares[i] != null || winner != null) {
-  //           return;
-  //         }
-  //         // send makeMove request here
-  //         makeMove(i);
-  //         const nextSquares = squares.slice();
-  //         switch (nextSquares[i]) {
-  //           case 0:
-  //             nextSquares[i] = null;
-  //             break;
-  //             case 1: 
-  //             nextSquares[i] = X;
-  //             break;
-  //             case 2: 
-  //             nextSquares[i] = O;
-  //             break;
-  //         }
-  //         // nextSquares[i] = nextSymbol;
-  //         setSquares(nextSquares);
-  //         // setIsXNext(!isXNext); // toggle turns
-  //       }}
-  //     />
-  //   );
-  // }
-
   async function squareClickHandler(i: number) {
     // if (squares[i] != null || winner != null) {
     //         return;
@@ -204,7 +172,7 @@ function Game({ townID, playerID }: GameComponentProps) {
             console.log(`value is: ${nextSquares[i]}`);
           }
           // nextSquares[i] = nextSymbol;
-          setSquares(nextSquares);
+          // setSquares(nextSquares);
           console.log(`after: ${nextSquares}`);
           // setIsXNext(!isXNext); // toggle turns
         };
@@ -226,17 +194,20 @@ function Game({ townID, playerID }: GameComponentProps) {
         <div className="game-board">
           <div className="board-row">
             {squares.slice(0,3).map((result, index) => 
-             <Square key={Math.random()} value={squares[index]}  onClick={()=>squareClickHandler(index)}/>
+           // eslint-disable-next-line react/no-array-index-key
+             <Square key={index} value={squares[index]}  onClick={()=>squareClickHandler(index)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(3,6).map((result, index) => 
-             <Square key={Math.random()} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
+                     // eslint-disable-next-line react/no-array-index-key
+             <Square key={index} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(6,9).map((result, index) => 
-             <Square key={Math.random()} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
+                     // eslint-disable-next-line react/no-array-index-key
+             <Square key={index} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
             )}
           </div>
         </div>

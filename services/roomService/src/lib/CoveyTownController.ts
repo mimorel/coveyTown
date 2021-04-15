@@ -211,14 +211,6 @@ export default class CoveyTownController {
     if (this._players.some(e => e.id === playerID)) {
       try {
         const gameResponse = this._tictactoe.startGame(playerID);
-
-        //this._listeners.forEach((listener) => listener.onjoinGame(playerID));
-        //if (gameResponse.charAt(0) === "X") {
-        //this._listeners.forEach((listener) => this.addGameListener(listener));
-      //}
-
-
-
         return gameResponse;
       } catch (e) {
         throw new Error('unable to startGame');
