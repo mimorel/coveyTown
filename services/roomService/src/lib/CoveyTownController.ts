@@ -235,6 +235,7 @@ export default class CoveyTownController {
 
 
   currentPlayer(): string{
+    /**
     const cp = this._tictactoe.currentPlayer();
     const foundPlayer = this._players.find((p) => p.id === cp)
     if (foundPlayer !== undefined) {
@@ -242,10 +243,8 @@ export default class CoveyTownController {
     return player.userName;
   }
 
-    else{
+    else{ }**/
       return this._tictactoe.currentPlayer();
-    }
-
   }
 
 
@@ -270,7 +269,7 @@ export default class CoveyTownController {
         this.endGame();
       } else {
         // update current player
-        this._TTTlisteners.forEach((listener) => listener.onTurn(this.currentPlayer()));
+        this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
       }
 
       return this._tictactoe.getBoard();
