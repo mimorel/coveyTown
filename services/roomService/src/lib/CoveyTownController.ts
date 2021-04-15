@@ -235,7 +235,17 @@ export default class CoveyTownController {
 
 
   currentPlayer(): string{
-    return this._tictactoe.currentPlayer();
+    const cp = this._tictactoe.currentPlayer();
+    const foundPlayer = this._players.find((p) => p.id === cp)
+    if (foundPlayer !== undefined) {
+    var  player: Player =  foundPlayer;
+    return player.userName;
+  }
+
+    else{
+      return this._tictactoe.currentPlayer();
+    }
+
   }
 
 
