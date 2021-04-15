@@ -69,8 +69,6 @@ export default class CoveyTownController {
   /** The list of CoveyTownListeners that are subscribed to events in this town * */
   private _listeners: CoveyTownListener[] = [];
 
-  private _TTTlisteners: CoveyTownListener[] = [];
-
   private readonly _coveyTownID: string;
 
   private _friendlyName: string;
@@ -151,15 +149,7 @@ export default class CoveyTownController {
     this._listeners.push(listener);
   }
 
-  /**
-   * Subscribe to events from this town's TTT game. Callers should make sure to
-   * unsubscribe when they no longer want those events by calling removeTownListener
-   *
-   * @param listener New listener
-   */
-  addGameListener(listener: CoveyTownListener): void {
-    this._TTTlisteners.push(listener);
-  }
+
 
   /**
    * Unsubscribe from events in this town.
@@ -171,15 +161,6 @@ export default class CoveyTownController {
     this._listeners = this._listeners.filter((v) => v !== listener);
   }
 
-  /**
-   * Unsubscribe from events in this town.
-   *
-   * @param listener The listener to unsubscribe, must be a listener that was registered
-   * with addTownListener, or otherwise will be a no-op
-   */
-  removeGameListener(listener: CoveyTownListener): void {
-    this._TTTlisteners = this._TTTlisteners.filter((v) => v !== listener);
-  }
 
 
   /**
@@ -273,15 +254,7 @@ export default class CoveyTownController {
   endGame(): void {
     try {
       const winner =  this.getWinner();
-      const allScores = this.getScores();
-      const leaderboardListing = allScores.find(e => e.userName === winner);
-
-      if (leaderboardListing === undefined) {
-        this.updateLeaderboard(winner, 1);
-      } else {
-        this.updateLeaderboard(winner, leaderboardListing.score);
-      }
-
+      this.updateLeaderboard(winner, 1);
       this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
     } catch (err) {
