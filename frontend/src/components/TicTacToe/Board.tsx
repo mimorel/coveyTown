@@ -13,11 +13,21 @@ interface SquareComponentProps {
 }
 
 function Square({value, onClick}: SquareComponentProps ): JSX.Element {
-  console.log(`square render index ${value}`)
+  // console.log(`square render index ${value}`)
+
+  function squareType(sq: number) {
+    if (sq===1) {
+      return 'X';
+    } if (sq===2) {
+      return 'O';
+    }  
+      return '';
+    }
+  
 
   return (
     <button type="button" className="square" onClick={onClick}>
-    {value}    
+      {squareType(value)}
 </button>
   );
 }
@@ -48,7 +58,7 @@ interface GameComponentProps {
 function Game({ townID, playerID }: GameComponentProps) {
   const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
-  const nextSymbol = isXNext ? "X" : "O";
+  const nextSymbol = isXNext ? "1" : "2";
   const winner = null;
   const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
@@ -74,10 +84,9 @@ function Game({ townID, playerID }: GameComponentProps) {
 
   useEffect(() => {
     socket!.on('updateBoard', (board: [][]) => {
-    console.log(`sessiontoken is ${sessionToken}`);
     console.log(board);
     const merged = [].concat(...board);
-    console.log(merged);
+    // console.log(merged);
     setSquares(merged);
     // call getWhoseTurn here
    
@@ -154,26 +163,26 @@ function Game({ townID, playerID }: GameComponentProps) {
     // if (squares[i] != null || winner != null) {
     //         return;
     //       }
-      await makeMove(i);
-      const nextSquares = squares.slice();
-      console.log(`nextSquares: ${nextSquares}`);
-          switch (squares[i]) {
-            case 0:
-            case '':
-              nextSquares[i] = '';
-              break;
-            case 1: 
-              nextSquares[i] = 'X';
-              break;
-            case 2: 
-              nextSquares[i] = 'O';
-              break;
-            default: 
-            console.log(`value is: ${nextSquares[i]}`);
-          }
-          // nextSquares[i] = nextSymbol;
-          // setSquares(nextSquares);
-          console.log(`after: ${nextSquares}`);
+     const nextSquares = squares.slice();
+     nextSquares[i] = nextSymbol;
+     setSquares(nextSquares);
+     await makeMove(i);
+      // const nextSquares = squares.slice();
+      // console.log(`nextSquares: ${nextSquares}`);
+          // switch (squares[i]) {
+          //   case 0:
+          //   case '':
+          //     nextSquares[i] = '';
+          //     break;
+          //   case 1: 
+          //     nextSquares[i] = 'X';
+          //     break;
+          //   case 2: 
+          //     nextSquares[i] = 'O';
+          //     break;
+          //   default: 
+          //   console.log(`value is: ${nextSquares[i]}`);
+          // }          // console.log(`after: ${nextSquares}`);
           // setIsXNext(!isXNext); // toggle turns
         };
 
@@ -200,13 +209,13 @@ function Game({ townID, playerID }: GameComponentProps) {
           </div>
           <div className="board-row">
           {squares.slice(3,6).map((result, index) => 
-                     // eslint-disable-next-line react/no-array-index-key
+          // eslint-disable-next-line react/no-array-index-key
              <Square key={index} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(6,9).map((result, index) => 
-                     // eslint-disable-next-line react/no-array-index-key
+          // eslint-disable-next-line react/no-array-index-key
              <Square key={index} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
             )}
           </div>

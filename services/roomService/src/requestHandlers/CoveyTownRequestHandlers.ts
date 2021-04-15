@@ -412,10 +412,11 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
     },
 
     onUpdateBoard(board: number[][]) {
-      console.log('before');
+      console.log('before: ');
       console.log(board);
       socket.emit('updateBoard', board);
-      console.log('UpdatedBoarddd');
+      console.log('after: ');
+      console.log(board);
     },
 
     onTurn(playerId: string) {
