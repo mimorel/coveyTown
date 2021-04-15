@@ -184,14 +184,7 @@ async function GameController(initData: TownJoinResponse,
     dispatchAppUpdate({ action: 'weMoved', location });
   };
 
-  // socket.on('updateBoard', (board: number[][]) => {
-  //   console.log("boardBefore");
-  //   dispatchAppUpdate({ action: 'updateBoard', board});
-  //   console.log(board);
-  //   console.log("after");
 
-  //   // dispatchAppUpdate({ action: 'disconnect' });
-  // });
 
 
   dispatchAppUpdate({
