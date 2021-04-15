@@ -91,8 +91,7 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
       <div className="game-info">{currentTurn}</div>
     <div className="game">
               <div className="board">
-                <Game townID={townID} playerID={playerID} playerUsername={playerUsername}
-                  />  
+                <Game townID={townID!} playerID={playerID!}/>  
                   </div>
                   </div>
         <Button colorScheme="red" style={{width: "20%", alignSelf: "center", marginTop: "10px"}} onClick={()=> {closeGame(); quitGame();}}>QUIT</Button>

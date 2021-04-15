@@ -1,14 +1,20 @@
 import React, { useState , useEffect} from "react";
 import ReactDOM from "react-dom";
 import {
-  Toast,
   useToast,
   Button
 } from '@chakra-ui/react';
 import { io, Socket } from 'socket.io-client';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
-function Square({ value, onClick }) {
+
+interface SquareComponentProps {
+  value: number,
+  onClick: () => Promise<void>,
+  // key: number
+}
+
+function Square({value, onClick}: SquareComponentProps ): JSX.Element {
   console.log(`square render index ${value}`)
 
   return (
@@ -18,66 +24,41 @@ function Square({ value, onClick }) {
   );
 }
 
-Square.propTypes = {
-  value: String,
-  onClick: null
+// function Restart({onClick: any}) {
+
+//   return (
+//     <Button size="sm" colorScheme="teal" type="button" className="restart" onClick={onClick}>
+//       Play again
+//     </Button>
+//   );
+// }
+
+// Restart.propTypes = {
+//   onClick: null
+// }
+
+// Restart.defaultProps = {
+//   onClick: () => {}
+// }
+
+interface GameComponentProps {
+  townID: string,
+  playerID: string
 }
 
-Square.defaultProps = {
-  value: null, 
-  onClick: () => {}
-}
 
-function Restart({onClick}) {
-
-  return (
-    <Button size="sm" colorScheme="teal" type="button" className="restart" onClick={onClick}>
-      Play again
-    </Button>
-  );
-}
-
-Restart.propTypes = {
-  onClick: null
-}
-
-Restart.defaultProps = {
-  onClick: () => {}
-}
-
-function Game(props) {
+function Game({ townID, playerID }: GameComponentProps) {
   const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "X" : "O";
   const winner = null;
-  const { townID } = props;
-  const { playerID } = props;
   const  { apiClient, players, sessionToken } = useCoveyAppState();
   const toast = useToast();
-  const { playerUsername } = props;
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
-  // const [ board, setBoard ] = useState(Array(9).fill(''));
+  const socket = io(url!, { auth: { token: sessionToken, coveyTownID: townID } });
 
-
-
-    // socket
-  const socket = io(url, { auth: { token: sessionToken, coveyTownID: townID } });
-
- // what is passed from the backend
-  socket.on('updateBoard', (board) => {
-    console.log(`sessiontoken is ${sessionToken}`);
-    console.log(board);
-    const merged = [].concat(...board);
-    console.log(merged);
-    setSquares(merged);
-    // call getWhoseTurn here
-   
-  });
-
-
-
-  // start game call here
-  async function startGame() {
+   // start game call here
+   async function startGame() {
     console.log(`playerid for start game: ${playerID}`);
     try {
       const start = await apiClient.startGame({
@@ -94,7 +75,20 @@ function Game(props) {
     }
   }
 
- async function getPosX(i) {
+ // what is passed from the backend
+  socket.on('updateBoard', (board: [][]) => {
+    console.log(`sessiontoken is ${sessionToken}`);
+    console.log(board);
+    const merged = [].concat(...board);
+    console.log(merged);
+    setSquares(merged);
+    // call getWhoseTurn here
+   
+  });
+
+
+
+ async function getPosX(i: number) {
     switch (i) {
       case 0:
       case 3:
@@ -114,7 +108,7 @@ function Game(props) {
     return 99;
   }
 
- async function getPosY(i) {
+ async function getPosY(i: number) {
     switch (i) {
       case 0:
       case 1:
@@ -134,16 +128,18 @@ function Game(props) {
     return 99;
   }
 
-  async function makeMove(i) {
+  async function makeMove(i: number) {
     const x = await getPosX(i);
     const y = await getPosY(i);
+    const xString = x.toString();
+    const yString = y.toString();
     try {    
       console.log(`x pos: ${x} y pos: ${y}`);
       const move = await apiClient.makeMove({
         coveyTownID: townID,
         player: playerID,
-        x,
-        y
+        x: xString,
+        y: yString
       });
       console.log(`makeMove response ${move.board}`);
     } catch (err) {
@@ -186,14 +182,14 @@ function Game(props) {
   //   );
   // }
 
-  async function squareClickHandler(i) {
+  async function squareClickHandler(i: number) {
     // if (squares[i] != null || winner != null) {
     //         return;
     //       }
       await makeMove(i);
       const nextSquares = squares.slice();
       console.log(`nextSquares: ${nextSquares}`);
-          switch (nextSquares[i]) {
+          switch (squares[i]) {
             case 0:
             case '':
               nextSquares[i] = '';
@@ -205,7 +201,7 @@ function Game(props) {
               nextSquares[i] = 'O';
               break;
             default: 
-            console.log('');
+            console.log(`value is: ${nextSquares[i]}`);
           }
           // nextSquares[i] = nextSymbol;
           setSquares(nextSquares);
@@ -213,16 +209,16 @@ function Game(props) {
           // setIsXNext(!isXNext); // toggle turns
         };
 
-  function renderRestartButton() {
-    return (
-      <Restart
-        onClick={() => {
-          setSquares(Array(9).fill(null));
-          setIsXNext(true);
-        }}
-      />
-    );
-  }
+  // function renderRestartButton() {
+  //   return (
+  //     <Restart
+  //       onClick={() => {
+  //         setSquares(Array(9).fill(null));
+  //         setIsXNext(true);
+  //       }}
+  //     />
+  //   );
+  // }
 
   return (
     <div className="container">
@@ -247,22 +243,10 @@ function Game(props) {
         <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>
           Start
     </Button>
-        <div className="restart-button">{renderRestartButton()}</div>
+        {/* <div className="restart-button">{renderRestartButton()}</div> */}
       </div>
     </div>
   );
-}
-
-Game.propTypes = {
-  townID: String,
-  playerID: String,
-  playerUsername: String
-}
-
-Game.defaultProps = {
-  townID: null,
-  playerID: null, 
-  playerUsername: null
 }
 
 export default Game;
