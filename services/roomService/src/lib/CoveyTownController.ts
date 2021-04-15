@@ -159,7 +159,7 @@ export default class CoveyTownController {
    */
   addGameListener(listener: CoveyTownListener): void {
     this._TTTlisteners.push(listener);
-    console.log('step2');
+    // console.log('step2');
   }
 
   /**
@@ -213,9 +213,9 @@ export default class CoveyTownController {
       try {
         const gameResponse = this._tictactoe.startGame(playerID);
 
-        this._listeners.forEach((listener) => listener.onjoinGame(playerID));
-        this._listeners.forEach((listener) => this.addGameListener(listener));
-        console.log('step1');
+        // this._listeners.forEach((listener) => listener.onjoinGame(playerID));
+        // this._listeners.forEach((listener) => this.addGameListener(listener));
+        // console.log('step1');
 
 
 
