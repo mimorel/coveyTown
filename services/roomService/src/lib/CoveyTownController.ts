@@ -159,7 +159,6 @@ export default class CoveyTownController {
    */
   addGameListener(listener: CoveyTownListener): void {
     this._TTTlisteners.push(listener);
-    // console.log('step2');
   }
 
   /**
@@ -212,13 +211,6 @@ export default class CoveyTownController {
     if (this._players.some(e => e.id === playerID)) {
       try {
         const gameResponse = this._tictactoe.startGame(playerID);
-
-        // this._listeners.forEach((listener) => listener.onjoinGame(playerID));
-        // this._listeners.forEach((listener) => this.addGameListener(listener));
-        // console.log('step1');
-
-
-
         return gameResponse;
       } catch (e) {
         throw new Error('unable to startGame');
@@ -235,7 +227,16 @@ export default class CoveyTownController {
 
 
   currentPlayer(): string{
-    return this._tictactoe.currentPlayer();
+    /**
+    const cp = this._tictactoe.currentPlayer();
+    const foundPlayer = this._players.find((p) => p.id === cp)
+    if (foundPlayer !== undefined) {
+    var  player: Player =  foundPlayer;
+    return player.userName;
+  }
+
+    else{ }**/
+      return this._tictactoe.currentPlayer();
   }
 
 
@@ -251,19 +252,16 @@ export default class CoveyTownController {
 
   makeMove(x:number, y:number): number[][] {
     try {
-      console.log('mk0');
 
       this._tictactoe.makeMove(x, y);
-      console.log('mk1');
       this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
-      console.log('mk2');
 
       // is game over
       if (this.isgameActive() === false) {
         this.endGame();
       } else {
         // update current player
-        this._TTTlisteners.forEach((listener) => listener.onTurn(this.currentPlayer()));
+        this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
       }
 
       return this._tictactoe.getBoard();
