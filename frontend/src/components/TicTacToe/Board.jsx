@@ -5,9 +5,11 @@ import {
   useToast,
   Button
 } from '@chakra-ui/react';
+import { io, Socket } from 'socket.io-client';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
 function Square({ value, onClick }) {
+  console.log(`square render index ${value}`)
 
   return (
     <button type="button" className="square" onClick={onClick}>
@@ -44,15 +46,34 @@ Restart.defaultProps = {
 }
 
 function Game(props) {
-  const [ squares, setSquares ] = useState(Array(9).fill(null));
+  const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "X" : "O";
   const winner = null;
   const { townID } = props;
   const { playerID } = props;
-  const  { apiClient, players } = useCoveyAppState();
+  const  { apiClient, players, sessionToken } = useCoveyAppState();
   const toast = useToast();
   const { playerUsername } = props;
+  const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
+  // const [ board, setBoard ] = useState(Array(9).fill(''));
+
+
+
+    // socket
+  const socket = io(url, { auth: { token: sessionToken, coveyTownID: townID } });
+
+ // what is passed from the backend
+  socket.on('updateBoard', (board) => {
+    console.log(`sessiontoken is ${sessionToken}`);
+    console.log(board);
+    const merged = [].concat(...board);
+    console.log(merged);
+    setSquares(merged);
+    // call getWhoseTurn here
+   
+  });
+
 
 
   // start game call here
@@ -135,24 +156,62 @@ function Game(props) {
   }
 
 
-  function renderSquare(i) {
-    return (
-      <Square
-        value={squares[i]}
-        onClick={() => {
-          if (squares[i] != null || winner != null) {
-            return;
+  // function renderSquare(i) {
+  //   return (
+  //     <Square
+  //       value={squares[i]}
+  //       onClick={() => {
+  //         if (squares[i] != null || winner != null) {
+  //           return;
+  //         }
+  //         // send makeMove request here
+  //         makeMove(i);
+  //         const nextSquares = squares.slice();
+  //         switch (nextSquares[i]) {
+  //           case 0:
+  //             nextSquares[i] = null;
+  //             break;
+  //             case 1: 
+  //             nextSquares[i] = X;
+  //             break;
+  //             case 2: 
+  //             nextSquares[i] = O;
+  //             break;
+  //         }
+  //         // nextSquares[i] = nextSymbol;
+  //         setSquares(nextSquares);
+  //         // setIsXNext(!isXNext); // toggle turns
+  //       }}
+  //     />
+  //   );
+  // }
+
+  async function squareClickHandler(i) {
+    // if (squares[i] != null || winner != null) {
+    //         return;
+    //       }
+      await makeMove(i);
+      const nextSquares = squares.slice();
+      console.log(`nextSquares: ${nextSquares}`);
+          switch (nextSquares[i]) {
+            case 0:
+            case '':
+              nextSquares[i] = '';
+              break;
+            case 1: 
+              nextSquares[i] = 'X';
+              break;
+            case 2: 
+              nextSquares[i] = 'O';
+              break;
+            default: 
+            console.log('');
           }
-          // send makeMove request here
-          makeMove(i);
-          const nextSquares = squares.slice();
-          nextSquares[i] = nextSymbol;
+          // nextSquares[i] = nextSymbol;
           setSquares(nextSquares);
-          setIsXNext(!isXNext); // toggle turns
-        }}
-      />
-    );
-  }
+          console.log(`after: ${nextSquares}`);
+          // setIsXNext(!isXNext); // toggle turns
+        };
 
   function renderRestartButton() {
     return (
@@ -170,19 +229,19 @@ function Game(props) {
       <div className="game">
         <div className="game-board">
           <div className="board-row">
-            {renderSquare(0)}
-            {renderSquare(1)}
-            {renderSquare(2)}
+            {squares.slice(0,3).map((result, index) => 
+             <Square key={1} value={squares[index]}  onClick={()=>squareClickHandler(index)}/>
+            )}
           </div>
           <div className="board-row">
-            {renderSquare(3)}
-            {renderSquare(4)}
-            {renderSquare(5)}
+          {squares.slice(3,6).map((result, index) => 
+             <Square key={2} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
+            )}
           </div>
           <div className="board-row">
-            {renderSquare(6)}
-            {renderSquare(7)}
-            {renderSquare(8)}
+          {squares.slice(6,9).map((result, index) => 
+             <Square key={3} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
+            )}
           </div>
         </div>
         <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>

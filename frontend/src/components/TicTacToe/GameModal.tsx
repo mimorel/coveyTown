@@ -68,12 +68,12 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
         console.log(`currplayer resp: ${curr.player}`);
         setCurrentTurn(`${curr.player}'s Turn`);
       } catch (err) {
-        console.log("couldnt get current player");
+        // console.log("couldnt get current player");
         }
       }
 
       useEffect(() =>  {
-        getWhoseTurn();
+        // getWhoseTurn();
       });
     
 
