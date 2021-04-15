@@ -412,15 +412,8 @@ function townSocketAdapter(socket: Socket): CoveyTownListener {
     },
 
     onUpdateBoard(board: number[][]) {
-<<<<<<< HEAD
-      console.log('before: ');
-      console.log(board);
+
       socket.emit('updateBoard', board);
-      console.log('after: ');
-      console.log(board);
-=======
-      socket.emit('updateBoard', board);
->>>>>>> 2acda63c7d0e20953d9ae350346e548fedc7717c
     },
 
     onTurn(playerId: string) {
@@ -467,7 +460,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // player's session is disconnected
   socket.on('disconnect', () => {
     townController.removeTownListener(listener);
-    townController.removeGameListener(listener);
+    //townController.removeGameListener(listener);
     townController.destroySession(s);
   });
 
@@ -487,7 +480,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // TTT, clean up listener
   socket.on('endGame', () => {
     townController.endGame();
-    townController.removeGameListener(listener);
+    //townController.removeGameListener(listener);
   });
 
 }
