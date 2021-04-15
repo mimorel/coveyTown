@@ -98,15 +98,15 @@ function Game({ townID, playerID }: GameComponentProps) {
  async function getPosX(i: number) {
     switch (i) {
       case 0:
-      case 3:
-      case 6:
-        return 0;
       case 1:
+      case 2:
+        return 0;
+      case 3:
       case 4:
-      case 7:
-        return 1;
-      case 2: 
       case 5:
+        return 1;
+      case 6: 
+      case 7:
       case 8: 
         return 2;
       default:
@@ -118,15 +118,15 @@ function Game({ townID, playerID }: GameComponentProps) {
  async function getPosY(i: number) {
     switch (i) {
       case 0:
-      case 1:
-      case 2:
-        return 0;
       case 3:
+      case 6:
+        return 0;
+      case 1:
       case 4:
-      case 5:
-        return 1;
-      case 6: 
       case 7:
+        return 1;
+      case 2: 
+      case 5:
       case 8: 
         return 2;
       default:
@@ -167,23 +167,6 @@ function Game({ townID, playerID }: GameComponentProps) {
      nextSquares[i] = nextSymbol;
      setSquares(nextSquares);
      await makeMove(i);
-      // const nextSquares = squares.slice();
-      // console.log(`nextSquares: ${nextSquares}`);
-          // switch (squares[i]) {
-          //   case 0:
-          //   case '':
-          //     nextSquares[i] = '';
-          //     break;
-          //   case 1: 
-          //     nextSquares[i] = 'X';
-          //     break;
-          //   case 2: 
-          //     nextSquares[i] = 'O';
-          //     break;
-          //   default: 
-          //   console.log(`value is: ${nextSquares[i]}`);
-          // }          // console.log(`after: ${nextSquares}`);
-          // setIsXNext(!isXNext); // toggle turns
         };
 
   // function renderRestartButton() {
@@ -210,13 +193,13 @@ function Game({ townID, playerID }: GameComponentProps) {
           <div className="board-row">
           {squares.slice(3,6).map((result, index) => 
           // eslint-disable-next-line react/no-array-index-key
-             <Square key={index} value={squares[index+3]} onClick={()=>squareClickHandler(index +3)}/>
+             <Square key={index} value={squares[index+3]} onClick={()=>squareClickHandler(index+3)}/>
             )}
           </div>
           <div className="board-row">
           {squares.slice(6,9).map((result, index) => 
           // eslint-disable-next-line react/no-array-index-key
-             <Square key={index} value={squares[index+6]} onClick={()=>squareClickHandler(index +6)}/>
+             <Square key={index} value={squares[index+6]} onClick={()=>squareClickHandler(index+6)}/>
             )}
           </div>
         </div>
