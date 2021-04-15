@@ -10,7 +10,6 @@ import useCoveyAppState from "../../hooks/useCoveyAppState";
 interface SquareComponentProps {
   value: number,
   onClick: () => Promise<void>,
-  // key: number
 }
 
 function Square({value, onClick}: SquareComponentProps ): JSX.Element {
@@ -54,7 +53,6 @@ function Game({ townID, playerID }: GameComponentProps) {
   const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
-  // const socket = io(url!, { auth: { token: sessionToken, coveyTownID: townID } });
 
    // start game call here
    async function startGame() {
@@ -151,36 +149,6 @@ function Game({ townID, playerID }: GameComponentProps) {
     }
   }
 
-
-  // function renderSquare(i) {
-  //   return (
-  //     <Square
-  //       value={squares[i]}
-  //       onClick={() => {
-  //         if (squares[i] != null || winner != null) {
-  //           return;
-  //         }
-  //         // send makeMove request here
-  //         makeMove(i);
-  //         const nextSquares = squares.slice();
-  //         switch (nextSquares[i]) {
-  //           case 0:
-  //             nextSquares[i] = null;
-  //             break;
-  //             case 1: 
-  //             nextSquares[i] = X;
-  //             break;
-  //             case 2: 
-  //             nextSquares[i] = O;
-  //             break;
-  //         }
-  //         // nextSquares[i] = nextSymbol;
-  //         setSquares(nextSquares);
-  //         // setIsXNext(!isXNext); // toggle turns
-  //       }}
-  //     />
-  //   );
-  // }
 
   async function squareClickHandler(i: number) {
     // if (squares[i] != null || winner != null) {
