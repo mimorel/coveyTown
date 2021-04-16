@@ -4,7 +4,6 @@ import {
   useToast,
   Button
 } from '@chakra-ui/react';
-import { io, Socket } from 'socket.io-client';
 import useCoveyAppState from "../../hooks/useCoveyAppState";
 
 interface SquareComponentProps {
@@ -13,7 +12,6 @@ interface SquareComponentProps {
 }
 
 function Square({value, onClick}: SquareComponentProps ): JSX.Element {
-  // console.log(`square render index ${value}`)
 
   function squareType(sq: number) {
     if (sq===1) {
@@ -32,23 +30,6 @@ function Square({value, onClick}: SquareComponentProps ): JSX.Element {
   );
 }
 
-// function Restart({onClick: any}) {
-
-//   return (
-//     <Button size="sm" colorScheme="teal" type="button" className="restart" onClick={onClick}>
-//       Play again
-//     </Button>
-//   );
-// }
-
-// Restart.propTypes = {
-//   onClick: null
-// }
-
-// Restart.defaultProps = {
-//   onClick: () => {}
-// }
-
 interface GameComponentProps {
   townID: string,
   playerID: string
@@ -59,10 +40,15 @@ function Game({ townID, playerID }: GameComponentProps) {
   const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "1" : "2";
-  const [ gameWinner, setGameWinner ] = useState('fake winner');
-  const [currPlayer, setCurrPlayer] = useState('currPlayer')
+  const [ gameWinner, setGameWinner ] = useState('');
+  const [currPlayer, setCurrPlayer] = useState('Waiting for player')
   const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
+
+  function getNameFromID(id: string) {
+    const playerName = players.find((p) => p.id === id)?.userName;
+    return playerName;
+  }
 
   // socket calls here
   useEffect(() => {
@@ -73,12 +59,18 @@ function Game({ townID, playerID }: GameComponentProps) {
   });
 
   socket.on('Game is Over', (winner: string) => {
-    console.log(winner);
-    setGameWinner(winner);
-  });
+    if (winner === "draw") {
+      setGameWinner("DRAW");
+    } else {
+    const name = getNameFromID(winner);
+    const winnerString = `Winner is: ${name}`;
+    setGameWinner(winnerString);
+  }});
 
   socket.on('playersTurn', (playerId: string) => {
-    setCurrPlayer(playerId);
+    const name = getNameFromID(playerId);
+    const currString = `${name}'s Turn`
+    setCurrPlayer(currString);
   }); 
 }}, [socket]);
 
@@ -167,25 +159,11 @@ function Game({ townID, playerID }: GameComponentProps) {
 
 
   async function squareClickHandler(i: number) {
-    // if (squares[i] != null || winner != null) {
-    //         return;
-    //       }
      const nextSquares = squares.slice();
      nextSquares[i] = nextSymbol;
      setSquares(nextSquares);
      await makeMove(i);
         };
-
-  // function renderRestartButton() {
-  //   return (
-  //     <Restart
-  //       onClick={() => {
-  //         setSquares(Array(9).fill(null));
-  //         setIsXNext(true);
-  //       }}
-  //     />
-  //   );
-  // }
 
   return (
     <div className="container">
