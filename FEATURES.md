@@ -27,11 +27,11 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 2. Press the `space bar`to view the leaderboard
 3. Look for your username on the board to see your points and where you fall in comparison to others in the room (higher up = more points)
 
-### Notes
+#### Notes
 - All users that enter the town begin with a score of 0
 
 ## Viewing the game as a non-participant in it
-#### Notes
+### Notes
 This feature is not listed in the user stories of our earlier project plan because we decided to add it during implementation. 
 - Please do not click 'Quit' if you are just a game viewer who is not participating in the actual gameplay
 
