@@ -260,8 +260,9 @@ export default class CoveyTownController {
       this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
     } catch (err) {
+    }
       // TODO: edit this case - no winner because game was quit early
-    } finally {
+   finally {
       this._tictactoe.endGame();
     }
   }
