@@ -459,7 +459,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // player's session is disconnected
   socket.on('disconnect', () => {
     townController.removeTownListener(listener);
-    townController.removeGameListener(listener);
+    //townController.removeGameListener(listener);
     townController.destroySession(s);
   });
 
@@ -479,7 +479,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // TTT, clean up listener
   socket.on('endGame', () => {
     townController.endGame();
-    townController.removeGameListener(listener);
+    //townController.removeGameListener(listener);
   });
 
 }
