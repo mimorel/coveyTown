@@ -174,7 +174,7 @@ describe('TicTacToe Tests', () => {
     });
     it('Should refresh the active players', async () => {
       game.endGame();
-      expect(game.currentPlayer()).toBe('draw');
+      expect(game.currentPlayer()).toBe('');
     });
     it('Should refresh the winner (throw an error because there should be none)', async () => {
       game.makeMove(1, 1); // [1 0 0] [2 1 0] [0 0 1]
