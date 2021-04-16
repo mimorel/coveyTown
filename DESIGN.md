@@ -10,54 +10,67 @@ In the backend, we created new object representations for the TicTactoe game boa
 On the frontend, we have added new objects to the map as well as new components to interact with for the game board and leaderboard. 
 
 ## Backend updates 
+CRC cards provided for _classes_, for classes that previously existed, additions are in **bold**.  
 #### Leaderboard.ts (all new)
 | Class | Leaderboard |
 |-|-|
 | State            | allScores [an array of userIDs (string), userNames (string) and scores (number)] |
 | Responsibilities | Tracks the running scores for players inside each room                           |
 | Collaborators    | Player                                                                           |
-<br>
+
 #### TicTacToe.ts (all new)  
-The TicTacToe class manages 
 | Class | TicTacToe |
 |-|-|
 | State            | player1 (String), player2 (String), gameBoard (2D array of numbers), current player (number), winningPlayer (String) |
 | Responsibilities | Manages and tracks the events of a TicTacToe game                                                                    |
 | Collaborators    |                                                                                                                      |
+
 #### CoveyTownController.ts
+Major changes: added the functionality to play a game of TicTacToe in the room (`startGame`, `isGameActive`, `getBoard`, `getWinner`, `currentPlayer`, `makeMove`, `endGame`), view and update the leaderboard (`getScores`, `updateLeaderboard`), notify appropriate listeners when certain events occur (inside `makeMove` and `endGame`). 
 | Class | CoveyTownController |
 |-|-|
-| State            | players (Player[]), sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]) |
+| State            | players (Player[]), sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]), friendlyName (string), townUpdatePassword (string), publicly listed (boolean), capacity (number), **tictactoe game (TicTacToe)**, **leaderboard (Leaderboard)** |
 | Responsibilities | Manages the events that occur in or involving players in the room, including adding, removing or relocating a player in a room.  |
-| Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyRoomListener          |
+| Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyTownListener          |
+
 #### CoveyTownStore.ts
+Major changes: modified to make calls related to TicTacToe () and the leaderboard (`getLeaderboard`, `updateLeaderboard`).
 | Class | CoveyTownsStore |
 |-|-|
 | State            | towns (CoveyTownController[]) |
 | Responsibilities | Stores all the existing towns in a singleton class |
 | Collaborators    | CoveyTownController |
+
+#### CoveyTownListener.ts  
+
+
 #### CoveyTownRequestHandlers.ts
-Added the following handlers:
-leaderboardHandler
-startGameHandler
-isgameActiveHandler
-currentPlayerHandler
-getWinnerHandler
-getBoardHandler
-makeMoveHandler
-endGameHandler
+Added the following handlers...
+...for the leaderboard: `leaderboardHandler`  
+...for the TictacToe board: `startGameHandler`, `isgameActiveHandler`, `currentPlayerHandler`, `getWinnerHandler`, `getBoardHandler`, `makeMoveHandler`, `endGameHandler`  
+<br>
+Also added to the townSocketAdapter and 
+
 #### towns.ts
 Added the following REST API calls:   
-/leaderboard/:townID  
-/tictactoe/:townID/:playerID  
-/tictactoe/active/:townID  
-/tictactoe/curplayer/:townID  
-/tictactoe/:townID/:playerID/move  
-/tictactoe/board/:townID  
-/tictactoe/winner/:townID  
-/tictactoe/:townID  
-#### TownsServiceClient.ts
+`/leaderboard/:townID` - gets the leaderboard (just the top 10 scores) for a town   
+`/tictactoe/:townID/:playerID` - starts a game of TicTacToe with the given user as one of the players (refreshes leftover game data)   
+`/tictactoe/active/:townID` - returns whether or not the TicTacToe game is active in a room  
+`/tictactoe/curplayer/:townID` - returns the player whose turn it currently is to make a move  
+`/tictactoe/:townID/:playerID/move` - makes a move in the TicTacToe game (values that represent the move itself passed in json body)  
+`/tictactoe/board/:townID` - returns the current game board   
+`/tictactoe/winner/:townID` - gets the winner of the last played TicTacToe game  
+`/tictactoe/:townID` - ends a TicTacToe game (refreshes most game data)  
 
+#### TownsServiceClient.ts
+`leaderboard`  
+`startGame`  
+`isgameActive`  
+`currentPlayer`  
+`getWinner`  
+`getBoard`  
+`makeMove`  
+`endGame` 
 
 <br><br>
 ## Frontend updates 
