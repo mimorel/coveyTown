@@ -151,13 +151,11 @@ export default class TicTacToe implements ITicTacToe{
     // check if move won game/ if we can keep playing
     if (this.isWin()) {
       this._gameActive = false;
-      //this.endGame();
     }
 
     if (this.isFull()) {
       this._gameActive = false;
 
-    //  this.endGame();
     }
 
     // change to next player

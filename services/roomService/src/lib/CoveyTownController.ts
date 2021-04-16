@@ -221,7 +221,7 @@ export default class CoveyTownController {
 
   getWinner(): string {
 
-  return this._tictactoe.getWinner();
+    return this._tictactoe.getWinner();
 
   }
 
@@ -240,8 +240,8 @@ export default class CoveyTownController {
       if (this.isgameActive() === false) {
         const finalBoard =  this._tictactoe.getBoard();
 
-        //SEND WINNER
-      try {
+        // SEND WINNER
+        try {
           const winner =  this.getWinner();
           this.updateLeaderboard(winner, 1);
         } catch (err) {
@@ -250,11 +250,11 @@ export default class CoveyTownController {
 
         this.endGame();
         return finalBoard;
-      }
-       else {
-        // update current player
-        this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
-      }
+      } 
+
+      // update current player
+      this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
+      
       return this._tictactoe.getBoard();
     } catch (err) {
       return err;
@@ -263,13 +263,13 @@ export default class CoveyTownController {
 
   endGame(): void {
     try {
-        const winner =  this.getWinner();
-        this._listeners.forEach((listener) => listener.onGameEnd(winner));
+      const winner =  this.getWinner();
+      this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
-      } catch (err) {
-        this._listeners.forEach((listener) => listener.onGameEnd("draw"));
+    } catch (err) {
+      this._listeners.forEach((listener) => listener.onGameEnd('draw'));
 
-      }
+    }
 
     this._tictactoe.endGame();
 
