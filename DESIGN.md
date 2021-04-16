@@ -1,7 +1,5 @@
 ## Overview
-To add TicTacToe to Covey.Town, we continued to utilize REST APIs for frontend-backend communication of both the game and the leaderboard. We also used
-socket communication for keeping a player's board updated when the other player makes a move (i.e. the player doesn't send a request, but still receives an
-update from the server). Since we utilized these existing methods of communication, the overarching architecture is largely unchanged. 
+To add TicTacToe to Covey.Town, we decided the existing architecture was sufficient to complete the task (see diagram below). We continued to utilize REST APIs for frontend-backend communication of both the game and the leaderboard. We also used socket communication for keeping a player's board updated when the other player makes a move (i.e. the player doesn't send a request, but still receives an update from the server). 
 
 <img src="SE Project Arch.png" />
 
