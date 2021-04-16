@@ -151,8 +151,7 @@ describe('TownServiceApiSocket', () => {
 
     await apiClient.makeMove({coveyTownID: town.coveyTownID, player: joinData.coveyUserID, x: '0', y: '0'});
 
-    //expect((await newPlayerPromise2)[0][0]).toBe(1);
-    //expect((await playerMadeMove)[0][0]).toBe(1);
+    await Promise.all([playerMadeMove, newPlayerPromise2]);
   });
   it('Informs players when the game has ended', async () => {
     const town = await createTownForTesting();

@@ -75,20 +75,15 @@ describe('TicTacToe Tests', () => {
       }
     });
     it('Should end the game if someone won', async () => {
-      const gameEnded = jest.spyOn(game, 'endGame');
       game.makeMove(0, 0); // [1 0 0] [0 0 0] [0 0 0]
       game.makeMove(1, 0); // [1 0 0] [2 0 0] [0 0 0]
       game.makeMove(2, 2); // [1 0 0] [2 0 0] [0 0 1]
       game.makeMove(1, 2); // [1 0 0] [2 0 2] [0 0 1]
       expect(game.isgameActive()).toBe(true);
-      expect(gameEnded).not.toBeCalled();
       game.makeMove(1, 1); // [1 0 0] [2 1 0] [0 0 1]
       expect(game.isgameActive()).toBe(false);
-      //expect(gameEnded).toBeCalled();
     });
     it('Should end the game if the board is full', async () => {
-      const gameEnded = jest.spyOn(game, 'endGame');
-
       game.makeMove(0, 0); // [1 0 0] [0 0 0] [0 0 0]
       game.makeMove(0, 1); // [1 2 0] [0 0 0] [0 0 0]
       game.makeMove(0, 2); // [1 2 1] [0 0 0] [0 0 0]
@@ -98,11 +93,9 @@ describe('TicTacToe Tests', () => {
       game.makeMove(2, 1); // [1 2 1] [2 1 2] [0 1 0]
       game.makeMove(2, 0); // [1 2 1] [2 1 2] [2 1 0]
       expect(game.isgameActive()).toBe(true);
-      expect(gameEnded).not.toBeCalled();
       // fill in the last empty space
       game.makeMove(2, 2); // [1 2 1] [2 1 2] [2 1 1]
       expect(game.isgameActive()).toBe(false);
-      //expect(gameEnded).toBeCalled();
     });
   });
 
@@ -163,14 +156,15 @@ describe('TicTacToe Tests', () => {
     });
     it('Should refresh the board', async () => {
       // check that board has spots filled out
+      expect(game.getBoard()[0][0]).toBe(1);
 
       game.endGame();
-      /**
+      
       for (let i = 1; i < 3; i += 1) {
         for (let j = 1; j < 3; j += 1) {
           expect(game.getBoard()[i][j]).toBe(0);
         }
-      } */
+      } 
     });
     it('Should refresh the active players', async () => {
       game.endGame();
