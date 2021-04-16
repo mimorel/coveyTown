@@ -3,7 +3,7 @@ To add TicTacToe to Covey.Town, we continued to utilize REST APIs for frontend-b
 socket communication for keeping a player's board updated when the other player makes a move (i.e. the player doesn't send a request, but still receives an
 update from the server). Since we utilized these existing methods of communication, the overarching architecture is largely unchanged. 
 
-
+<img src="SE Project Arch.png" />
 
 In the backend, we created new object representations for the game board and leaderboard and added them into each town. We also added to the REST API and WebSocket.
 
@@ -36,6 +36,17 @@ On the frontend, we have added new objects to the map as well as new components 
 | Collaborators    |  |
 #### CoveyTownRequestHandlers.ts
 #### towns.ts
+Added the following REST API calls: 
+/leaderboard/:townID
+/tictactoe/:townID/:playerID
+/tictactoe/active/:townID
+/tictactoe/curplayer/:townID
+/tictactoe/:townID/:playerID/move
+/tictactoe/board/:townID
+/tictactoe/winner/:townID
+/tictactoe/:townID
+#### TownsServiceClient.ts
+
 
 <br><br>
 ## Frontend updates 
