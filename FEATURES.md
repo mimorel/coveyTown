@@ -33,7 +33,7 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 ## Viewing the game as a non-participant in it
 ### Notes
 This feature is not listed in the user stories of our earlier project plan because we decided to add it during implementation. 
-- Please do not click 'Quit' if you are just a game viewer who is not participating in the actual gameplay
+- Please do not click 'Quit' if you are just a game viewer who is not participating in the actual gameplay. Click outside of the modal to close it instead. 
 
 ### How to 
 1. If two people are already playing a game of TicTacToe, navigate to the 'TicTacToe Board' section of the map where they are playing
