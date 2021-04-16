@@ -19,12 +19,11 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 8. If you play until the end of the game and there is a winner, the winner will be awarded points and the loser will get 0 points. If it is a draw, neither player gets any points. These points will be reflected in the leaderboard (see next section)
 9. If you want to play again, you and a second player will need to press 'Start game' again to start a new game
 
-<img align=center width="462" alt="Screen Shot 2021-04-15 at 9 13 43 PM" src="https://user-images.githubusercontent.com/35878459/114986272-8364b980-9e2f-11eb-96c4-c5cd64931637.png"> <img align=center width="456" alt="Screen Shot 2021-04-15 at 9 14 58 PM" src="https://user-images.githubusercontent.com/35878459/114986397-a68f6900-9e2f-11eb-87b2-4b56af7dd4e7.png">
-
-
 ## Viewing the leaderboard (user story 3)
 ### Notes
 - All users that enter the town begin with a score of 0
+
+![leaderboard](https://user-images.githubusercontent.com/35878459/115081670-65836d00-9ea0-11eb-922b-2a1420547fbe.gif)
 
 ### How to view
 1. Move your avatar to the 'Leaderboard' section of the map
@@ -33,7 +32,9 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 
 ## Viewing the game 
 ### Notes
-This feature is not listed in the user stories of our earlier project plan. We decided to add it during implementation. 
+This feature is not listed in the user stories of our earlier project plan because we decided to add it during implementation. 
+- Please do not click 'Quit' if you are just a game viewer who is not participating in the actual gameplay
 
 1. If two people are already playing a game of TicTacToe, navigate to the 'TicTacToe Board' section of the map where they are playing
-2. Press the `space bar` to open the game board
+2. Press the `space bar` to open the game board. If you try to join the game via 'Start game', nothing will happen because you cannot join the game until the current game finishes (see note in **Notes** about ending viewing)
+3. Wait for a player to make their next move, then you should be able to watch the board game and see whose turn it is. You will only see the current game once a player makes a move.
