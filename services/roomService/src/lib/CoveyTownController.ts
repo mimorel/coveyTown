@@ -257,7 +257,7 @@ export default class CoveyTownController {
     try {
       const winner =  this.getWinner();
       this.updateLeaderboard(winner, 1);
-      this._listeners.forEach((listener) => listener.onGameEnd(winner));
+      //this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
     } catch (err) {
       // TODO: edit this case - no winner because game was quit early
