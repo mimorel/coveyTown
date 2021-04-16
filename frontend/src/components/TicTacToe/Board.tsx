@@ -1,5 +1,4 @@
-import React, { useState , useEffect} from "react";
-import ReactDOM from "react-dom";
+import React, { useState , useEffect } from "react";
 import {
   useToast,
   Button
@@ -36,22 +35,20 @@ interface GameComponentProps {
 }
 
 
-function Game({ townID, playerID }: GameComponentProps) {
+function Game({ townID, playerID }: GameComponentProps): JSX.Element {
   const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "1" : "2";
   const [ gameWinner, setGameWinner ] = useState('');
   const [currPlayer, setCurrPlayer] = useState('Waiting for another player')
-  const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
+  const  { apiClient, players, socket } = useCoveyAppState();
   const toast = useToast();
 
-  function getNameFromID(id: string) {
-    const playerName = players.find((p) => p.id === id)?.userName;
-    return playerName;
-  }
+ 
 
   // socket calls here
   useEffect(() => {
+
     if (socket) {
     socket.on('updateBoard', (board: [][]) => {
     const merged = [].concat(...board);
@@ -60,30 +57,29 @@ function Game({ townID, playerID }: GameComponentProps) {
 
   socket.on('Game is Over', (winner: string) => {
     if (winner === "draw") {
-      setGameWinner("GAME WAS A DRAW");
+      setGameWinner("GAME WAS A DRAW");   
+       setIsXNext(true);
     } else {
-    const name = getNameFromID(winner);
+    const name = players.find((p) => p.id === winner)?.userName;
     const winnerString = `Winner is: ${name}`;
     setGameWinner(winnerString);
+    setIsXNext(true);
   }});
 
   socket.on('playersTurn', (playerId: string) => {
-    const name = getNameFromID(playerId);
+    const name = players.find((p) => p.id === playerId)?.userName;
     const currString = `${name}'s Turn`
     setCurrPlayer(currString);
   }); 
-}}, [socket]);
-
+}}, [socket, players]);
 
    // start game call here
    async function startGame() {
-    console.log(`playerid for start game: ${playerID}`);
     try {
-      const start = await apiClient.startGame({
+      await apiClient.startGame({
         coveyTownID: townID,
         playerID,
       });
-      console.log(`startgame resp: ${start.gameStatus}`);
     } catch (err) {
       toast({
         title: 'Unable to startgame',
@@ -109,7 +105,7 @@ function Game({ townID, playerID }: GameComponentProps) {
       case 8: 
         return 2;
       default:
-      console.log("default case");
+      return 99;
     }
     return 99;
   }
@@ -129,7 +125,7 @@ function Game({ townID, playerID }: GameComponentProps) {
       case 8: 
         return 2;
       default:
-      console.log("default case");
+      return 99;
     }
     return 99;
   }
@@ -140,13 +136,12 @@ function Game({ townID, playerID }: GameComponentProps) {
     const xString = x.toString();
     const yString = y.toString();
     try {    
-      const move = await apiClient.makeMove({
+     await apiClient.makeMove({
         coveyTownID: townID,
         player: playerID,
         x: xString,
         y: yString
       });
-      console.log(`makeMove response ${move.board}`);
     } catch (err) {
       toast({
         title: 'Unable to make move',
@@ -178,6 +173,7 @@ function Game({ townID, playerID }: GameComponentProps) {
           </div>
           <div className="board-row">
           {squares.slice(3,6).map((result, index) => 
+          // Professor said this disabled is okay to use in this case.
           // eslint-disable-next-line react/no-array-index-key
              <Square key={index} value={squares[index+3]} onClick={()=>squareClickHandler(index+3)}/>
             )}
@@ -190,7 +186,7 @@ function Game({ townID, playerID }: GameComponentProps) {
           </div>
         </div>
         <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>
-          Start
+          START GAME
     </Button>
       </div>
     </div>

@@ -366,7 +366,6 @@ class CoveyGameScene extends Phaser.Scene {
     this.physics.add.overlap(sprite, leaderboard,
       () => {
       if(cursorKeys.space.isDown && this.player){
-        console.log("hit");
         this.video.openLeaderboardModal();
         this.pause();
         }

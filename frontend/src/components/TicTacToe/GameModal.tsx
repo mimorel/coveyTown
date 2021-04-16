@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   Button,
   Modal,
@@ -39,11 +39,9 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
     // quit game call here
     async function quitGame() {
       try {
-        let quit = { message: 'TownID is undefined'}
         if (townID !== undefined) {
-          quit = await apiClient.endGame({ coveyTownID: townID });
+          await apiClient.endGame({ coveyTownID: townID });
         }
-        console.log(`quitgame resp: ${quit.message}`);
       } catch (err) {
         toast({
           title: 'Unable to quit game',
@@ -67,7 +65,7 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
       <ModalHeader style={{alignSelf: "center"}}>TIC TAC TOE</ModalHeader>
     <div className="game">
               <div className="board">
-                <Game townID={townID!} playerID={playerID!}/>  
+              { townID && playerID ?  <Game townID={townID} playerID={playerID}/>  : <></> }
                   </div>
                   </div>
         <Button colorScheme="red" style={{width: "20%", alignSelf: "center", marginTop: "10px"}} onClick={()=> {closeGame(); quitGame();}}>QUIT</Button>
