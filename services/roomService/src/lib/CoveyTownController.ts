@@ -239,7 +239,8 @@ export default class CoveyTownController {
       if (this.isgameActive() === false) {
         const finalBoard =  this._tictactoe.getBoard();
         this.endGame();
-        return finalBoard
+
+        return finalBoard;
 
       } else {
         // update current player
