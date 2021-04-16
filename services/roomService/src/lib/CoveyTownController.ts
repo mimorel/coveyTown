@@ -239,6 +239,15 @@ export default class CoveyTownController {
       // is game over
       if (this.isgameActive() === false) {
         const finalBoard =  this._tictactoe.getBoard();
+
+        //SEND WINNER
+      try {
+          const winner =  this.getWinner();
+          this.updateLeaderboard(winner, 1);
+        } catch (err) {
+          /// do nothing if no winnter
+        }
+
         this.endGame();
         return finalBoard;
       }
@@ -254,14 +263,13 @@ export default class CoveyTownController {
 
   endGame(): void {
     try {
-      const winner =  this.getWinner();
-      this.updateLeaderboard(winner, 1);
-      this._listeners.forEach((listener) => listener.onGameEnd(winner));
+        const winner =  this.getWinner();
+        this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
-    } catch (err) {
-      this._listeners.forEach((listener) => listener.onGameEnd("draw"));
+      } catch (err) {
+        this._listeners.forEach((listener) => listener.onGameEnd("draw"));
 
-    }
+      }
 
     this._tictactoe.endGame();
 
