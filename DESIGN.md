@@ -10,19 +10,19 @@ In the backend, we created new object representations for the TicTactoe game boa
 On the frontend, we have added new objects to the map as well as new components to interact with for the game board and leaderboard. 
 
 ## Backend updates 
-CRC cards provided for _classes_, for classes that previously existed, additions are in **bold**.  
+CRC cards provided for _classes_ that are new or have modifications. Updates are in **bold**.  
 #### Leaderboard.ts (all new)
 | Class | Leaderboard |
 |-|-|
-| State            | allScores [an array of userIDs (string), userNames (string) and scores (number)] |
-| Responsibilities | Tracks the running scores for players inside each room                           |
-| Collaborators    | Player                                                                           |
+| State            | **allScores [an array of userIDs (string), userNames (string) and scores (number)]** |
+| Responsibilities | **Tracks the running scores for players inside each room**                           |
+| Collaborators    | **Player**                                                                           |
 
 #### TicTacToe.ts (all new)  
 | Class | TicTacToe |
 |-|-|
-| State            | player1 (String), player2 (String), gameBoard (2D array of numbers), current player (number), winningPlayer (String) |
-| Responsibilities | Manages and tracks the events of a TicTacToe game                                                                    |
+| State            | **player1 (String), player2 (String), gameBoard (2D array of numbers), current player (number), winningPlayer (String)** |
+| Responsibilities | **Manages and tracks the events of a TicTacToe game**                                                                    |
 | Collaborators    |                                                                                                                      |
 
 #### CoveyTownController.ts
@@ -31,25 +31,20 @@ Major changes: added the functionality to play a game of TicTacToe in the room (
 |-|-|
 | State            | players (Player[]), sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]), friendlyName (string), townUpdatePassword (string), publicly listed (boolean), capacity (number), **tictactoe game (TicTacToe)**, **leaderboard (Leaderboard)** |
 | Responsibilities | Manages the events that occur in or involving players in the room, including adding, removing or relocating a player in a room.  |
-| Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyTownListener          |
+| Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyTownListener, **TicTacToe**, **Leaderboard**          |
 
 #### CoveyTownStore.ts
-Major changes: modified to make calls related to TicTacToe () and the leaderboard (`getLeaderboard`, `updateLeaderboard`).
-| Class | CoveyTownsStore |
-|-|-|
-| State            | towns (CoveyTownController[]) |
-| Responsibilities | Stores all the existing towns in a singleton class |
-| Collaborators    | CoveyTownController |
+Major changes: added functionality to play the TicTacToe game and view the leaderboard for a town in the rooms store.
 
 #### CoveyTownListener.ts  
-
+Added functionality to call on listeners when a move is made (`onUpdateBoard()` and `onTurn()`) and when the game ends (`onGameEnd()`). 
 
 #### CoveyTownRequestHandlers.ts
 Added the following handlers...
 ...for the leaderboard: `leaderboardHandler`  
 ...for the TictacToe board: `startGameHandler`, `isgameActiveHandler`, `currentPlayerHandler`, `getWinnerHandler`, `getBoardHandler`, `makeMoveHandler`, `endGameHandler`  
 <br>
-Also added to the townSocketAdapter and 
+Also added to the `townSocketAdapter` to emit on player game moves and game end, and to the `townSubsriptionHandler` to inform the controller when a game ends.
 
 #### towns.ts
 Added the following REST API calls:   
@@ -63,14 +58,7 @@ Added the following REST API calls:
 `/tictactoe/:townID` - ends a TicTacToe game (refreshes most game data)  
 
 #### TownsServiceClient.ts
-`leaderboard`  
-`startGame`  
-`isgameActive`  
-`currentPlayer`  
-`getWinner`  
-`getBoard`  
-`makeMove`  
-`endGame` 
+Added the following client calls that correspond with the API calls in towns.ts above: `leaderboard`, `startGame`, `isgameActive`, `currentPlayer`, `getWinner`, `getBoard`, `makeMove`, `endGame` 
 
 <br><br>
 ## Frontend updates 
