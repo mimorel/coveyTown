@@ -40,7 +40,7 @@ function Game({ townID, playerID }: GameComponentProps): JSX.Element {
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "1" : "2";
   const [ gameWinner, setGameWinner ] = useState('');
-  const [currPlayer, setCurrPlayer] = useState('Waiting for another player')
+  const [currPlayer, setCurrPlayer] = useState('Press start to join game!')
   const  { apiClient, players, socket } = useCoveyAppState();
   const toast = useToast();
 
@@ -67,10 +67,13 @@ function Game({ townID, playerID }: GameComponentProps): JSX.Element {
   }});
 
   socket.on('playersTurn', (playerId: string) => {
+    if (playerId==='') {
+      setCurrPlayer("Waiting for another player");
+    } else {
     const name = players.find((p) => p.id === playerId)?.userName;
     const currString = `${name}'s Turn`
     setCurrPlayer(currString);
-  }); 
+  }}); 
 }}, [socket, players]);
 
    // start game call here
