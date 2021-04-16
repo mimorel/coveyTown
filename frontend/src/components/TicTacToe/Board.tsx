@@ -41,7 +41,7 @@ function Game({ townID, playerID }: GameComponentProps) {
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "1" : "2";
   const [ gameWinner, setGameWinner ] = useState('');
-  const [currPlayer, setCurrPlayer] = useState('Waiting for player')
+  const [currPlayer, setCurrPlayer] = useState('Waiting for another player')
   const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
 
@@ -60,7 +60,7 @@ function Game({ townID, playerID }: GameComponentProps) {
 
   socket.on('Game is Over', (winner: string) => {
     if (winner === "draw") {
-      setGameWinner("DRAW");
+      setGameWinner("GAME WAS A DRAW");
     } else {
     const name = getNameFromID(winner);
     const winnerString = `Winner is: ${name}`;
@@ -140,7 +140,6 @@ function Game({ townID, playerID }: GameComponentProps) {
     const xString = x.toString();
     const yString = y.toString();
     try {    
-      console.log(`x pos: ${x} y pos: ${y}`);
       const move = await apiClient.makeMove({
         coveyTownID: townID,
         player: playerID,
@@ -168,8 +167,8 @@ function Game({ townID, playerID }: GameComponentProps) {
   return (
     <div className="container">
       <div className="game">
-        {gameWinner}
-        {currPlayer}
+        <div style={{color: "blue", fontSize: "18px"}}>{currPlayer}</div>
+        <div style={{color: "green", fontSize: "32px"}}>{gameWinner}</div>
         <div className="game-board">
           <div className="board-row">
             {squares.slice(0,3).map((result, index) => 
@@ -193,7 +192,6 @@ function Game({ townID, playerID }: GameComponentProps) {
         <Button type="button" size="md" colorScheme="blue" className="start" onClick={()=> startGame()}>
           Start
     </Button>
-        {/* <div className="restart-button">{renderRestartButton()}</div> */}
       </div>
     </div>
   );

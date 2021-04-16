@@ -64,7 +64,7 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay/>
       <ModalContent>
-      <ModalHeader>TIC TAC TOE</ModalHeader>
+      <ModalHeader style={{alignSelf: "center"}}>TIC TAC TOE</ModalHeader>
     <div className="game">
               <div className="board">
                 <Game townID={townID!} playerID={playerID!}/>  
