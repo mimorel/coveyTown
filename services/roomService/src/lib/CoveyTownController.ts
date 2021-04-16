@@ -224,7 +224,9 @@ export default class CoveyTownController {
 
 
   getWinner(): string {
-    return this._tictactoe.getWinner();
+
+  return this._tictactoe.getWinner();
+
   }
 
 
@@ -260,9 +262,10 @@ export default class CoveyTownController {
       this._listeners.forEach((listener) => listener.onGameEnd(winner));
 
     } catch (err) {
-      // TODO: edit this case - no winner because game was quit early
+      this._listeners.forEach((listener) => listener.onGameEnd("draw"));
 
     }
+
     this._tictactoe.endGame();
 
   }
