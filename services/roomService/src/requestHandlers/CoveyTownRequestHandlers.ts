@@ -344,7 +344,6 @@ export async function getBoardHandler(requestData: InfoRequest): Promise<Respons
 
 export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
-  console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
   const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
   const errorForBug = [[5, 0, 0],
     [0, 0, 0],
@@ -459,7 +458,7 @@ export function townSubscriptionHandler(socket: Socket): void {
   // player's session is disconnected
   socket.on('disconnect', () => {
     townController.removeTownListener(listener);
-    //townController.removeGameListener(listener);
+    // townController.removeGameListener(listener);
     townController.destroySession(s);
   });
 
@@ -472,14 +471,14 @@ export function townSubscriptionHandler(socket: Socket): void {
   // Register an event listener for the client socket: if a player starts a game of
   // TTT, add a listener
   socket.on('startTTT', () => {
-    //townController.addGameListener(listener);
+    // townController.addGameListener(listener);
   });
 
   // Register an event listener for the client socket: if a player starts a game of
   // TTT, clean up listener
   socket.on('endGame', () => {
     townController.endGame();
-    //townController.removeGameListener(listener);
+    // townController.removeGameListener(listener);
   });
 
 }

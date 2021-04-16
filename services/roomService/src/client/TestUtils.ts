@@ -82,17 +82,17 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
   const playerJoinedGamePromise = new Promise<string>((resolve) => {
     socket.on('playerJoinedTTT', (playerID: string) => {
       resolve(playerID);
-    })
+    });
   });
   const playerMadeMovePromise = new Promise<number[][]>((resolve) => {
     socket.on('updateBoard', (board: number[][]) => {
       resolve(board);
-    })
+    });
   });
   const gameEndedPromise = new Promise<string>((resolve) => {
     socket.on('Game is Over', (winner: string) => {
       resolve(winner);
-    })
+    });
   });
 
 

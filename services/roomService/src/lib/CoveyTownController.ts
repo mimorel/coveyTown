@@ -218,8 +218,8 @@ export default class CoveyTownController {
     return player.userName;
   }
 
-    else{ }**/
-      return this._tictactoe.currentPlayer();
+    else{ } */
+    return this._tictactoe.currentPlayer();
   }
 
 
@@ -261,7 +261,6 @@ export default class CoveyTownController {
 
     } catch (err) {
       // TODO: edit this case - no winner because game was quit early
-      console.log(err);
     } finally {
       this._tictactoe.endGame();
     }

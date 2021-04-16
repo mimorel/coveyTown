@@ -48,8 +48,9 @@ describe('Leaderboard', () => {
       const user = testlb.allScores.filter((userinfo) => userinfo.userID === userID);
       const initScore = user[0].score;
       testlb.updateScore(userID, 1);
-      expect(user[0].score).toBe(initScore + 1);
-      expect(user[0].userID).toBe(userID);
+      const updatedUser = testlb.allScores.filter((userinfo) => userinfo.userID === userID);
+      expect(updatedUser[0].score).toBe(initScore + 1);
+      expect(updatedUser[0].userID).toBe(userID);
     });
     it('Should use the given score to update', async () => {
       const userID = '004';
@@ -57,7 +58,8 @@ describe('Leaderboard', () => {
       const initScore = user[0].score;
       const score = 4;
       testlb.updateScore(userID, score);
-      expect(user[0].score).toBe(initScore + score);
+      const updatedUser = testlb.allScores.filter((userinfo) => userinfo.userID === userID);
+      expect(updatedUser[0].score).toBe(initScore + score);
     });
   });
 
