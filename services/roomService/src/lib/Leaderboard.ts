@@ -31,12 +31,22 @@ export default class Leaderboard {
   }
 
   updateScore(userID: string, points: number): void {
-    this._allScores.forEach((userInfo) => {
-      const currScore = userInfo.score;
-      if (userInfo.userID === userID) {
-        userInfo.score = currScore + points;
-      }
-    });
+
+    let user: {userID: string, userName: string, score: number };
+    const potentialUser = this._allScores.filter((userInfo) => userID === userInfo.userID );
+
+    if (potentialUser.length > 0) {
+      [ user ] = potentialUser;
+    } else {
+      user = { userID, userName: userID, score: points };
+    }
+    
+    const lb = this._allScores.filter((userInfo) =>  userID !== userInfo.userID );
+    const updatedUser = { userID: user.userID, userName: user.userName, score: user.score + points };
+    lb.push(updatedUser);
+
+    this.allScores = lb;
+    
   }
 
   /**
@@ -54,5 +64,14 @@ export default class Leaderboard {
     const topScores: { userName: string, score: number }[] = allScoreValues.slice(0, 10);
 
     return topScores;
+  }
+
+  /**
+   * Removes the given player from the scoreboard (i.e. when they leave the room)
+   * 
+   * @param playerid 
+   */
+  removePlayer(playerid: string): void {
+    this.allScores = this._allScores.filter((player) => player.userID !== playerid);
   }
 }
