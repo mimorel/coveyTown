@@ -26,24 +26,19 @@ CRC cards provided for _classes_ that are new or have modifications. Updates are
 | Collaborators    |                                                                                                                      |
 
 #### CoveyTownController.ts, CoveyTownsStore.ts
-Major changes: added the functionality to play a game of TicTacToe in the room and view and update the leaderboard. In controller, also added functionality to notify appropriate listeners when certain events occur (`makeMove` and `endGame`). 
+Added the functionality to play a game of TicTacToe in the room and view and update the leaderboard. In controller, also added functionality to notify appropriate listeners when certain events occur (`makeMove` and `endGame`). 
 | Class | CoveyTownController |
 |-|-|
 | State            | players (Player[]), sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]), friendlyName (string), townUpdatePassword (string), publicly listed (boolean), capacity (number), **tictactoe game (TicTacToe)**, **leaderboard (Leaderboard)** |
 | Responsibilities | Manages the events that occur in or involving players in the room, including adding, removing or relocating a player in a room.  |
 | Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyTownListener, **TicTacToe**, **Leaderboard**          |
 
-#### CoveyTownListener.ts  
+#### CoveyTownListener.ts
 Added functionality to call on listeners when a move is made (`onUpdateBoard()` and `onTurn()`) and when the game ends (`onGameEnd()`). 
 
-#### CoveyTownRequestHandlers.ts
-Added the following handlers...
-...for the leaderboard: `leaderboardHandler`  
-...for the TictacToe board: `startGameHandler`, `isgameActiveHandler`, `currentPlayerHandler`, `getWinnerHandler`, `getBoardHandler`, `makeMoveHandler`, `endGameHandler`  
-<br>
-Also added to the `townSocketAdapter` to emit on player game moves and game end, and to the `townSubsriptionHandler` to inform the controller when a game ends.
+#### CoveyTownRequestHandlers.ts, towns.ts, TownsServiceClient.ts
+Added handlers for the below API calls. Also added to the `townSocketAdapter` to emit on player game moves and game end, and to the `townSubsriptionHandler` to inform the controller when a game ends (in CoveyTownRequestHandlers.ts).
 
-#### towns.ts, TownsServiceClient.ts
 Added the following REST API calls (call for client defined TownsServiceClient.ts is in parenthesis):   
 `/leaderboard/:townID` - gets the leaderboard (just the top 10 scores) for a town (`leaderboard`)   
 `/tictactoe/:townID/:playerID` - starts a game of TicTacToe with the given user as one of the players, refreshes leftover game data (`startGame`)   
