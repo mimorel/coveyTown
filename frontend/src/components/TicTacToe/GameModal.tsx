@@ -25,9 +25,6 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
   const townID = video?.coveyTownID;
   const  { apiClient } = useCoveyAppState();
   const toast = useToast();
-  const [ currentTurn, setCurrentTurn ] = useState("Waiting for player");
-
-
   const playerID = players.find((p) => p.userName === playerUsername)?.id;
 
   const openGame = useCallback(()=>{
@@ -56,26 +53,6 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
       }
     }
 
-    async function getWhoseTurn() {
-      // console.log(`playerid for start game: ${playerID}`);
-      try {
-        let curr = { player: 'TownID was undefined'}
-        if (townID !== undefined) {
-          curr = await apiClient.currentPlayer({
-            coveyTownID: townID,
-          });
-        }
-        console.log(`currplayer resp: ${curr.player}`);
-        setCurrentTurn(`${curr.player}'s Turn`);
-      } catch (err) {
-        // console.log("couldnt get current player");
-        }
-      }
-
-      useEffect(() =>  {
-        // getWhoseTurn();
-      });
-    
 
   const closeGame = useCallback(()=>{
     onClose();
@@ -88,7 +65,6 @@ export default function GameModal({ players }: ChildComponentProps): JSX.Element
       <ModalOverlay/>
       <ModalContent>
       <ModalHeader>TIC TAC TOE</ModalHeader>
-      <div className="game-info">{currentTurn}</div>
     <div className="game">
               <div className="board">
                 <Game townID={townID!} playerID={playerID!}/>  

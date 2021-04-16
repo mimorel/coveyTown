@@ -59,10 +59,29 @@ function Game({ townID, playerID }: GameComponentProps) {
   const [ squares, setSquares ] = useState(Array(9).fill(''));
   const [ isXNext, setIsXNext ] = useState(true);
   const nextSymbol = isXNext ? "1" : "2";
-  const winner = null;
+  const [ gameWinner, setGameWinner ] = useState('fake winner');
+  const [currPlayer, setCurrPlayer] = useState('currPlayer')
   const  { apiClient, players, sessionToken, socket } = useCoveyAppState();
   const toast = useToast();
-  const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
+
+  // socket calls here
+  useEffect(() => {
+    if (socket) {
+    socket.on('updateBoard', (board: [][]) => {
+    const merged = [].concat(...board);
+    setSquares(merged);
+  });
+
+  socket.on('Game is Over', (winner: string) => {
+    console.log(winner);
+    setGameWinner(winner);
+  });
+
+  socket.on('playersTurn', (playerId: string) => {
+    setCurrPlayer(playerId);
+  }); 
+}}, [socket]);
+
 
    // start game call here
    async function startGame() {
@@ -81,18 +100,6 @@ function Game({ townID, playerID }: GameComponentProps) {
       })
     }
   }
-
-  useEffect(() => {
-    socket!.on('updateBoard', (board: [][]) => {
-    console.log(board);
-    const merged = [].concat(...board);
-    // console.log(merged);
-    setSquares(merged);
-    // call getWhoseTurn here
-   
-  })
-}, [socket]);
-
 
 
  async function getPosX(i: number) {
@@ -183,6 +190,8 @@ function Game({ townID, playerID }: GameComponentProps) {
   return (
     <div className="container">
       <div className="game">
+        {gameWinner}
+        {currPlayer}
         <div className="game-board">
           <div className="board-row">
             {squares.slice(0,3).map((result, index) => 
