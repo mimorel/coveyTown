@@ -10,13 +10,13 @@ export default interface ITicTacToe {
   startGame(playerID: string): string;
 
   /**
-  returns tictactoe whether game is currently active. False if game has not started,
-  or if game is over( has been won/board is full)
+  Retrieves from tictactoe whether game is currently active.
+  False if game has not started  or if game is over( has been won/board is full)
   */
   isgameActive(): boolean;
 
   /**
-  returns playerId of player's whose current turn it is in tictactoe
+  Retrieves playerId of player's whose current turn it is in tictactoe
   */
   currentPlayer(): string;
 
@@ -27,7 +27,8 @@ export default interface ITicTacToe {
   getWinner(): string;
 
   /**
-  returns array with gameBoard with 1's inplace of x and 2's in place of o
+  returns array with gameBoard with 1's inplace of x and 2's in place of o, 0's
+  represent empty spaces
   */
   getBoard(): number[][];
 
@@ -42,6 +43,7 @@ export default interface ITicTacToe {
 
   /**
   sets game status to inactive, preventing further moves until game is restarted
+  Clears players info, readying ttt for new game
   */
   endGame(): void;
 

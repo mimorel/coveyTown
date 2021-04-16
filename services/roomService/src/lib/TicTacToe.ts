@@ -37,7 +37,6 @@ export default class TicTacToe implements ITicTacToe{
 
 
 
-
   private resetGameBoard(): void {
     this._gameBoard = [[0, 0, 0],
       [0, 0, 0],
@@ -50,9 +49,8 @@ export default class TicTacToe implements ITicTacToe{
 
 
 
-
-
   startGame(playerID: string): string {
+    // if no one else has joined the game
     if (this._player1Id === '') {
       this._player1Id = playerID;
       return 'Waiting for player2';
@@ -65,6 +63,7 @@ export default class TicTacToe implements ITicTacToe{
     if (this._gameActive) {
       throw new Error('gameAlreadyActive');
     }
+    // if two players have joined the game
 
     this._player2Id = playerID;
     this._gameActive = true;
@@ -85,14 +84,14 @@ export default class TicTacToe implements ITicTacToe{
     return this._winningPlayer;
   }
 
-  // ask about this and not using copy
+
   getBoard(): number[][] {
     return this._gameBoard;
   }
 
 
   /**
-   * Is the board full, or is the room to continue playing?
+   * Is the board full, or is there room to continue playing?
   */
   private isFull(): boolean {
     for (let i = 0; i < 3; i += 1) {
@@ -164,7 +163,7 @@ export default class TicTacToe implements ITicTacToe{
 
   }
 
-  // makes game inactive
+
   endGame(): void{
     this.resetGameBoard();
     this._gameActive = false;
