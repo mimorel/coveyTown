@@ -17,7 +17,7 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 
 #### Notes
 - This is a two player game. This means:
-  - Any users that try to join the game after two players are already in the game will not be able to join the game until after the current game finishes. They can however watch the current game (see [viewing the game](#Viewing the game))
+  - Any users that try to join the game after two players are already in the game will not be able to join the game until after the current game finishes. They can however watch the current game (see [viewing the game](#viewing-the-game))
   - A single user could play by themselves by starting the game as both users, but to simulate two players in the game, simply join the town/game from two separate browser windows 
 
 ## Viewing the leaderboard (user story 3)
