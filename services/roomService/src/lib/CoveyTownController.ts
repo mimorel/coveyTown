@@ -195,6 +195,8 @@ export default class CoveyTownController {
       try {
         const gameResponse = this._tictactoe.startGame(playerID);
         this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
+        this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
+
 
         return gameResponse;
 
@@ -234,19 +236,17 @@ export default class CoveyTownController {
 
       this._tictactoe.makeMove(x, y);
       this._listeners.forEach((listener) => listener.onUpdateBoard(this.getBoard()));
-
       // is game over
       if (this.isgameActive() === false) {
         const finalBoard =  this._tictactoe.getBoard();
         this.endGame();
-
         return finalBoard;
-
-      } else {
+      }
+       else {
         // update current player
         this._listeners.forEach((listener) => listener.onTurn(this.currentPlayer()));
-        return this._tictactoe.getBoard();
       }
+      return this._tictactoe.getBoard();
     } catch (err) {
       return err;
     }

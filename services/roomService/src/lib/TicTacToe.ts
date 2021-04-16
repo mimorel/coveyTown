@@ -1,6 +1,6 @@
 import ITicTacToe from './ITicTacToe';
 
-/** 
+/**
  * An implamentation of ITicTacToe representing the leaderboard, which shows the top scores in each town.
 */
 export default class TicTacToe implements ITicTacToe{
@@ -69,6 +69,7 @@ export default class TicTacToe implements ITicTacToe{
     this._player2Id = playerID;
     this._gameActive = true;
     this._winningPlayer = '';
+    this._curPlayer = 1;
 
 
 
@@ -90,7 +91,7 @@ export default class TicTacToe implements ITicTacToe{
   }
 
 
-  /** 
+  /**
    * Is the board full, or is the room to continue playing?
   */
   private isFull(): boolean {
@@ -104,7 +105,7 @@ export default class TicTacToe implements ITicTacToe{
     return true;
   }
 
-  /** 
+  /**
    * Checks if the current player's last move won the game
   */
   private isWin(): boolean {
@@ -149,11 +150,14 @@ export default class TicTacToe implements ITicTacToe{
 
     // check if move won game/ if we can keep playing
     if (this.isWin()) {
-      this.endGame();
+      this._gameActive = false;
+      //this.endGame();
     }
 
     if (this.isFull()) {
-      this.endGame();
+      this._gameActive = false;
+
+    //  this.endGame();
     }
 
     // change to next player
