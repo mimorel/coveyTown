@@ -2,7 +2,8 @@
 TicTacToe is a feature of covey.town in which users in the same town can compete against each other in a game of tic-tac-toe. 
 
 ## Playing the game (user stories 1 and 2)
-![tictactoe](https://user-images.githubusercontent.com/35878459/115083143-abd9cb80-9ea2-11eb-8f43-78c1d10eed22.gif)
+<img src="https://user-images.githubusercontent.com/35878459/115083143-abd9cb80-9ea2-11eb-8f43-78c1d10eed22.gif" height="250"/>
+
 ### How to play
 1. Navigate to the 'TicTacToe Board' section of the map
 2. Press the `space bar` to open the game board. If you are the first player to join the game, you will see the text 'Press start to join game!'. If you are the second player to join the game, you will see the text 'Waiting for another player'
