@@ -344,7 +344,6 @@ export async function getBoardHandler(requestData: InfoRequest): Promise<Respons
 
 export async function makeMoveHandler(requestData: MakeMoveRequest): Promise<ResponseEnvelope<GetBoardResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
-  console.log(`in handler, x: ${requestData.x} y: ${requestData.y}`);
   const game = townsStore.makeMove(requestData.coveyTownID, Number(requestData.x), Number(requestData.y), requestData.player);
   const errorForBug = [[5, 0, 0],
     [0, 0, 0],

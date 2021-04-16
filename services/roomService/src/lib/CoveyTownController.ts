@@ -261,7 +261,6 @@ export default class CoveyTownController {
 
     } catch (err) {
       // TODO: edit this case - no winner because game was quit early
-      console.log(err);
     } finally {
       this._tictactoe.endGame();
     }
