@@ -218,8 +218,8 @@ export default class CoveyTownController {
     return player.userName;
   }
 
-    else{ }**/
-      return this._tictactoe.currentPlayer();
+    else{ } */
+    return this._tictactoe.currentPlayer();
   }
 
 
