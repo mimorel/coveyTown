@@ -45,6 +45,9 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
   playerMoved: Promise<RemoteServerPlayer>,
   newPlayerJoined: Promise<RemoteServerPlayer>,
   playerDisconnected: Promise<RemoteServerPlayer>,
+  playerJoinedGame: Promise<string>,
+  playerMadeMove: Promise<number[][]>,
+  gameEnded: Promise<string>,
 } {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
@@ -76,6 +79,21 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
       resolve(player);
     });
   });
+  const playerJoinedGamePromise = new Promise<string>((resolve) => {
+    socket.on('playerJoinedTTT', (playerID: string) => {
+      resolve(playerID);
+    })
+  });
+  const playerMadeMovePromise = new Promise<number[][]>((resolve) => {
+    socket.on('updateBoard', (board: number[][]) => {
+      resolve(board);
+    })
+  });
+  const gameEndedPromise = new Promise<string>((resolve) => {
+    socket.on('Game is Over', (winner: string) => {
+      resolve(winner);
+    })
+  });
 
 
   createdSocketClients.push(socket);
@@ -86,6 +104,9 @@ export function createSocketClient(server: http.Server, sessionToken: string, co
     playerMoved: playerMovedPromise,
     newPlayerJoined: newPlayerPromise,
     playerDisconnected: playerDisconnectPromise,
+    playerJoinedGame: playerJoinedGamePromise,
+    playerMadeMove: playerMadeMovePromise,
+    gameEnded: gameEndedPromise,
   };
 }
 export function setSessionTokenAndTownID(coveyTownID: string, sessionToken: string, socket: ServerSocket):void {

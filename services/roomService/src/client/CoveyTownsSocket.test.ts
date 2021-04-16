@@ -3,12 +3,14 @@ import CORS from 'cors';
 import http from 'http';
 import { nanoid } from 'nanoid';
 import { AddressInfo } from 'net';
+import { promisify } from 'util';
 import io from 'socket.io';
 import * as TestUtils from './TestUtils';
 
 import { UserLocation } from '../CoveyTypes';
 import TownsServiceClient from './TownsServiceClient';
 import addTownRoutes from '../router/towns';
+import { join } from 'path';
 
 type TestTownData = {
   friendlyName: string, coveyTownID: string,
@@ -131,5 +133,54 @@ describe('TownServiceApiSocket', () => {
     await Promise.all([socketConnected, connectPromise2]);
     await apiClient.deleteTown({coveyTownID: town.coveyTownID, coveyTownPassword: town.townUpdatePassword});
     await Promise.all([socketDisconnected, disconnectPromise2]);
+  });
+
+  /**
+   * Start of new tests
+   */
+  it('Informs players when a player makes a move in TicTacToe', async () => {
+    const town = await createTownForTesting();
+    const joinData = await apiClient.joinTown({coveyTownID: town.coveyTownID, userName: nanoid()});
+    const joinData2 = await apiClient.joinTown({coveyTownID: town.coveyTownID, userName: nanoid()});
+    const {socketConnected, playerMadeMove} = TestUtils.createSocketClient(server, joinData.coveySessionToken, town.coveyTownID);
+    const {
+      socketConnected: connectPromise2,
+      playerMadeMove: newPlayerPromise2,
+    } = TestUtils.createSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
+    await Promise.all([socketConnected, connectPromise2]);
+
+    await apiClient.startGame({coveyTownID: town.coveyTownID, playerID: joinData.coveyUserID});
+    await apiClient.startGame({coveyTownID: town.coveyTownID, playerID: joinData2.coveyUserID});
+
+    await apiClient.makeMove({coveyTownID: town.coveyTownID, player: joinData.coveyUserID, x: '0', y: '0'});
+
+    expect((await newPlayerPromise2)[0][0]).toBe(1);
+    expect((await playerMadeMove)[0][0]).toBe(1);
+  });
+  it('Informs players when the game has ended', async () => {
+    const town = await createTownForTesting();
+    const user1 = nanoid();
+    const user2 = nanoid();
+    const joinData = await apiClient.joinTown({coveyTownID: town.coveyTownID, userName: user1});
+    const joinData2 = await apiClient.joinTown({coveyTownID: town.coveyTownID, userName: user2});
+    const {socketConnected, gameEnded} = TestUtils.createSocketClient(server, joinData.coveySessionToken, town.coveyTownID);
+    const {
+      socketConnected: connectPromise2,
+      gameEnded: newPlayerPromise2,
+    } = TestUtils.createSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
+    await Promise.all([socketConnected, connectPromise2]);
+
+    await apiClient.startGame({coveyTownID: town.coveyTownID, playerID: joinData.coveyUserID});
+    await apiClient.startGame({coveyTownID: town.coveyTownID, playerID: joinData2.coveyUserID});
+
+    await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: joinData.coveyUserID, x: '0', y: '0'});
+    await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: joinData2.coveyUserID, x: '0', y: '1'});
+    await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: joinData.coveyUserID, x: '1', y: '1'});
+    await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: joinData2.coveyUserID, x: '1', y: '0'});
+    await apiClient.makeMove({ coveyTownID: town.coveyTownID, player: joinData.coveyUserID, x: '2', y: '2'});
+
+    await apiClient.endGame({ coveyTownID: town.coveyTownID });
+
+    await Promise.all([gameEnded, newPlayerPromise2]);
   });
 });
