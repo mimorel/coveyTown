@@ -5,7 +5,7 @@ update from the server). Since we utilized these existing methods of communicati
 
 <img src="SE Project Arch.png" />
 
-In the backend, we created new object representations for the game board and leaderboard and added them into each town. We also added to the REST API and WebSocket.
+In the backend, we created new object representations for the TicTactoe game board and leaderboard and added them into each town. We also added to the REST API and WebSocket functionality to allow for communication of all TicTacToe related information with the frontend.
 
 On the frontend, we have added new objects to the map as well as new components to interact with for the game board and leaderboard. 
 
@@ -16,35 +16,46 @@ On the frontend, we have added new objects to the map as well as new components 
 | State            | allScores [an array of userIDs (string), userNames (string) and scores (number)] |
 | Responsibilities | Tracks the running scores for players inside each room                           |
 | Collaborators    | Player                                                                           |
-#### TicTacToe.ts (all new)
+<br>
+#### TicTacToe.ts (all new)  
+The TicTacToe class manages 
 | Class | TicTacToe |
 |-|-|
 | State            | player1 (String), player2 (String), gameBoard (2D array of numbers), current player (number), winningPlayer (String) |
-| Responsibilities | Manages and tracks the events of a TicTacToe game                           |
-| Collaborators    |                                                                            |
+| Responsibilities | Manages and tracks the events of a TicTacToe game                                                                    |
+| Collaborators    |                                                                                                                      |
 #### CoveyTownController.ts
 | Class | CoveyTownController |
 |-|-|
-| State            | players in the room (Player[]), valid sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]) |
+| State            | players (Player[]), sessions (PlayerSession[]), videoClient (IVideoClient), listeners (CoveyRoomListener[]) |
 | Responsibilities | Manages the events that occur in or involving players in the room, including adding, removing or relocating a player in a room.  |
 | Collaborators    | PlayerSession, IVideoClient, TwilioVideo, CoveyRoomListener          |
 #### CoveyTownStore.ts
 | Class | CoveyTownsStore |
 |-|-|
-| State            |  |
-| Responsibilities |  |
-| Collaborators    |  |
+| State            | towns (CoveyTownController[]) |
+| Responsibilities | Stores all the existing towns in a singleton class |
+| Collaborators    | CoveyTownController |
 #### CoveyTownRequestHandlers.ts
+Added the following handlers:
+leaderboardHandler
+startGameHandler
+isgameActiveHandler
+currentPlayerHandler
+getWinnerHandler
+getBoardHandler
+makeMoveHandler
+endGameHandler
 #### towns.ts
-Added the following REST API calls: 
-/leaderboard/:townID
-/tictactoe/:townID/:playerID
-/tictactoe/active/:townID
-/tictactoe/curplayer/:townID
-/tictactoe/:townID/:playerID/move
-/tictactoe/board/:townID
-/tictactoe/winner/:townID
-/tictactoe/:townID
+Added the following REST API calls:   
+/leaderboard/:townID  
+/tictactoe/:townID/:playerID  
+/tictactoe/active/:townID  
+/tictactoe/curplayer/:townID  
+/tictactoe/:townID/:playerID/move  
+/tictactoe/board/:townID  
+/tictactoe/winner/:townID  
+/tictactoe/:townID  
 #### TownsServiceClient.ts
 
 
