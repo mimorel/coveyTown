@@ -1,7 +1,7 @@
 # TicTacToe game
 TicTacToe is a feature of covey.town in which users in the same town can compete against each other in a game of tic-tac-toe. 
 
-## Playing the game
+## Playing the game (user stories 1 and 2)
 
 ### How to play
 1. Navigate to the 'TicTacToe Board' section of the map
@@ -21,7 +21,7 @@ TicTacToe is a feature of covey.town in which users in the same town can compete
 <img align=center width="462" alt="Screen Shot 2021-04-15 at 9 13 43 PM" src="https://user-images.githubusercontent.com/35878459/114986272-8364b980-9e2f-11eb-96c4-c5cd64931637.png"> <img align=center width="456" alt="Screen Shot 2021-04-15 at 9 14 58 PM" src="https://user-images.githubusercontent.com/35878459/114986397-a68f6900-9e2f-11eb-87b2-4b56af7dd4e7.png">
 
 
-## Viewing the leaderboard
+## Viewing the leaderboard (user story 3)
 ### How to view
 1. Move your avatar to the 'Leaderboard' section of the map
 2. Press the `space bar`to view the leaderboard
