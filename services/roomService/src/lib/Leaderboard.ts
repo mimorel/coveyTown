@@ -55,4 +55,8 @@ export default class Leaderboard {
 
     return topScores;
   }
+
+  removePlayer(playerid: string): void {
+    this.allScores = this._allScores.filter((player) => player.userID !== playerid);
+  }
 }

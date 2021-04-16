@@ -127,6 +127,8 @@ export default class CoveyTownController {
     this._players = this._players.filter((p) => p.id !== session.player.id);
     this._sessions = this._sessions.filter((s) => s.sessionToken !== session.sessionToken);
     this._listeners.forEach((listener) => listener.onPlayerDisconnected(session.player));
+
+    this._leaderboard.removePlayer(session.player.id);
   }
 
   /**
